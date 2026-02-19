@@ -79,6 +79,16 @@ class AriListener extends Command
                             $this->callingService->cleanupCall($event);
                             break;
 
+                        case 'RecordingFinished':
+                            $recName = $event['recording']['name'] ?? 'unknown';
+                            $this->info("✅ Recording finished: $recName");
+                            $this->callingService->saveCallHistory($event);
+                            break;
+
+                        case 'RecordingFailed':
+                            $this->error("❌ Recording FAILED: " . ($event['recording']['name'] ?? ''));
+                            break;
+
                         case 'ChannelDestroyed':
                             $channelId = $event['channel']['id'];
                             $this->line("💀 Destroyed: $channelId");

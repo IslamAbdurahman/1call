@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\CallHistory;
 use App\Models\Operator;
 use App\Models\SipNumber;
 use Illuminate\Support\Facades\Http;
@@ -34,7 +35,20 @@ class CallingService
     public function handleIncomingCall($event)
     {
         $inboundChannelId = $event['channel']['id'];
-        $caller = $event['channel']['caller']['number'] ?? 'Unknown';
+
+        // caller.number bo'sh bo'lsa (internal PJSIP calls), channel nomidan ajratamiz
+        // Channel name format: PJSIP/101-00000001
+        $caller = $event['channel']['caller']['number'] ?? '';
+        if (empty($caller) || $caller === 'unknown' || $caller === 'anonymous') {
+            $channelName = $event['channel']['name'] ?? '';
+            if (preg_match('/PJSIP\/([^\-]+)/', $channelName, $m)) {
+                $caller = $m[1];
+            }
+        }
+        if (empty($caller)) {
+            $caller = 'Unknown';
+        }
+
         $called = $event['channel']['dialplan']['exten'] ?? 'Unknown';
 
         Log::info("📞 NEW INBOUND CALL", ['caller' => $caller, 'channel' => $inboundChannelId]);
@@ -107,6 +121,14 @@ class CallingService
 
             // 3. Yozib olishni boshlash
             $recordingName = "rec_" . $callInfo['bridge_id'] . "_" . time();
+
+            // Boshlanish vaqtini keshga saqlash
+            $callInfo['start_time'] = now()->toDateTimeString();
+            $callInfo['recording_name'] = $recordingName;
+            Cache::put("call:{$callInfo['inbound_channel']}", $callInfo, 1800);
+            Cache::put("call:{$callInfo['outbound_channel']}", $callInfo, 1800);
+            Cache::put("bridge_info:{$callInfo['bridge_id']}", $callInfo, 1800);
+
             $this->recordBridge($callInfo['bridge_id'], $recordingName);
         }
     }
@@ -171,15 +193,105 @@ class CallingService
         $channelId = $event['channel']['id'];
         $callInfo = Cache::get("call:$channelId");
 
-        if ($callInfo) {
-            $this->hangupChannel($callInfo['inbound_channel']);
-            $this->hangupChannel($callInfo['outbound_channel']);
-            $this->destroyBridge($callInfo['bridge_id']);
+        if (!$callInfo) {
+            return;
+        }
 
+        $this->hangupChannel($callInfo['inbound_channel']);
+        $this->hangupChannel($callInfo['outbound_channel']);
+        $this->destroyBridge($callInfo['bridge_id']);
+
+        // Agar recording boshlanmagan bo'lsa (operator ko'tarmadi) — no-answer
+        if (empty($callInfo['recording_name'])) {
+            // Dublikat oldini olish: faqat inbound kanal uchun bir marta yozamiz
+            if ($channelId === $callInfo['inbound_channel']) {
+                CallHistory::create([
+                    'date_time' => $callInfo['start_time'] ?? now(),
+                    'src' => $callInfo['caller'] ?? null,
+                    'dst' => $callInfo['called'] ?? null,
+                    'duration' => 0,
+                    'type' => 'inbound',
+                    'status' => 'no-answer',
+                    'recorded_file' => null,
+                    'call_id' => $callInfo['inbound_channel'] ?? null,
+                    'module' => 'ARI',
+                ]);
+                Log::info('📵 No-answer CallHistory saqlandi', [
+                    'src' => $callInfo['caller'] ?? '-',
+                    'dst' => $callInfo['called'] ?? '-',
+                ]);
+            }
+            // No-answer: keshni tozalaymiz
             Cache::forget("call:{$callInfo['inbound_channel']}");
             Cache::forget("call:{$callInfo['outbound_channel']}");
             Cache::forget("bridge_info:{$callInfo['bridge_id']}");
         }
+        else {
+            // Recording ketayapti: bridge_info ni SAQLAYMIZ — RecordingFinished ishlatadi
+            // Faqat call:channel keshlarini o'chiramiz
+            Cache::forget("call:{$callInfo['inbound_channel']}");
+            Cache::forget("call:{$callInfo['outbound_channel']}");
+        // bridge_info ni saveCallHistory() o'chiradi!
+        }
+    }
+
+    /**
+     * RecordingFinished eventida call_histories ga yozish
+     */
+    public function saveCallHistory($event)
+    {
+        $recording = $event['recording'] ?? [];
+        $recordingName = $recording['name'] ?? null;
+        $duration = (int)($recording['duration'] ?? 0);
+        $format = $recording['format'] ?? 'wav';
+
+        // Asterisk yozuvlarni ko'pincha /var/spool/asterisk/recording/ ga saqlaydi
+        $asteriskRecDir = '/var/spool/asterisk/recording';
+        $recordedFile = $recordingName ? "{$asteriskRecDir}/{$recordingName}.{$format}" : null;
+
+        // BridgeId ni recording name dan ajratish: rec_{bridgeId}_{timestamp}
+        $bridgeId = null;
+        $src = null;
+        $dst = null;
+        $startTime = null;
+        $callId = null;
+        $type = 'inbound';
+
+        if ($recordingName && preg_match('/^rec_([^_]+(?:_[^_]+)*)_(\d+)$/', $recordingName, $m)) {
+            $bridgeId = $m[1];
+        }
+
+        if ($bridgeId) {
+            $callInfo = Cache::get("bridge_info:{$bridgeId}");
+            if ($callInfo) {
+                $src = $callInfo['caller'] ?? null;
+                $dst = $callInfo['called'] ?? null;
+                $startTime = $callInfo['start_time'] ?? null;
+                $callId = $callInfo['inbound_channel'] ?? null;
+
+                // Cleanup cache
+                Cache::forget("bridge_info:{$bridgeId}");
+            }
+        }
+
+        $status = $duration > 0 ? 'answered' : 'no-answer';
+
+        $history = CallHistory::create([
+            'date_time' => $startTime ?? now(),
+            'src' => $src,
+            'dst' => $dst,
+            'duration' => $duration,
+            'type' => $type,
+            'status' => $status,
+            'recorded_file' => $recordedFile,
+            'linked_id' => $recordingName,
+            'call_id' => $callId,
+            'module' => 'ARI',
+        ]);
+
+        Log::info("💾 CallHistory saqlandi: #{$history->id}", [
+            'src' => $src, 'dst' => $dst, 'duration' => $duration, 'file' => $recordedFile
+        ]);
     }
 
     private function hangupChannel($channelId)
