@@ -9,10 +9,11 @@
 
 - [0. Nginx o'rnatish](#0-nginx-ornatish)
 - [1. PostgreSQL o'rnatish](#1-postgresql-ornatish)
-- [2. Asterisk o'rnatish](#2-asterisk-ornatish)
-- [3. ODBC o'rnatish](#3-odbc-ornatish)
-- [4. PHP 8.3 o'rnatish](#4-php-83-ornatish)
-- [5. Proyektni ishga tushirish](#5-proyektni-ishga-tushirish)
+- [2. Proyektni klonlash](#2-proyektni-klonlash)
+- [3. Asterisk o'rnatish](#3-asterisk-ornatish)
+- [4. ODBC o'rnatish](#4-odbc-ornatish)
+- [5. PHP 8.3 o'rnatish](#5-php-83-ornatish)
+- [6. Proyektni ishga tushirish](#6-proyektni-ishga-tushirish)
 
 ---
 
@@ -148,40 +149,135 @@ Muvaffaqiyatli ulanganingizda `\q` bilan chiqing.
 
 ---
 
-## 2. Asterisk o'rnatish
+## 2. Proyektni klonlash
 
-### 2.1. Asterisk 23 ni o'rnatish
+Asterisk konfiguratsiyalarini ko'chirish uchun avval proyekt klonlanishi kerak.
+
+### 2.1. Git o'rnatish
 
 ```bash
-sudo apt update
-sudo apt install -y build-essential wget subversion \
-    libncurses5-dev libssl-dev libxml2-dev libsqlite3-dev \
-    uuid-dev libjansson-dev libedit-dev
+sudo apt install -y git
+```
 
+### 2.2. Proyektni klonlash
+
+```bash
+cd /var/www
+sudo git clone git@github.com:IslamAbdurahman/1call.git
+cd /var/www/1call
+```
+
+> ⚡ **Eslatma:** SSH kalitingiz GitHub'ga qo'shilgan bo'lishi kerak.
+> Agar SSH kalit yo'q bo'lsa, HTTPS orqali klonlang:
+> ```bash
+> sudo git clone https://github.com/IslamAbdurahman/1call.git
+> ```
+
+---
+
+## 3. Asterisk o'rnatish
+
+> Manba: [efsol.ru — Asterisk o'rnatish (rasmlar bilan)](https://efsol.ru/manuals/install-asterisk22-ubuntu-source/)
+> Quyida Asterisk **23** versiyasi uchun moslashtirilgan.
+> 📸 Har bir qadam uchun rasmli ko'rsatmalar yuqoridagi havolada mavjud.
+
+### 3.1. Tizimni yangilash
+
+```bash
+sudo apt update && sudo apt upgrade -y
+```
+
+### 3.2. Kerakli kutubxonalarni o'rnatish
+
+Asteriskni kompilatsiya qilish va ishlashi uchun kerakli paketlar:
+
+```bash
+sudo apt install -y build-essential wget subversion \
+    libjansson-dev libxml2-dev libssl-dev libncurses5-dev \
+    libnewt-dev libsqlite3-dev libcurl4-openssl-dev \
+    libspandsp-dev libsrtp2-dev libyuv-dev libpcap-dev \
+    pkg-config libiksemel-dev uuid-dev libedit-dev \
+    libgsm1-dev libncurses-dev
+```
+
+### 3.3. Asterisk 23 manba kodini yuklab olish
+
+```bash
 cd /usr/src
 sudo wget https://downloads.asterisk.org/pub/telephony/asterisk/asterisk-23-current.tar.gz
-sudo tar xzf asterisk-23-current.tar.gz
-cd asterisk-23.*/
+sudo tar -zxvf asterisk-23-current.tar.gz
+cd asterisk-23*/
+```
 
-# Kerakli kutubxonalarni o'rnatish
-sudo contrib/scripts/get_mp3_source.sh
+### 3.4. Asterisk uchun qo'shimcha kutubxonalarni o'rnatish
+
+```bash
 sudo contrib/scripts/install_prereq install
+```
 
-# Kompilatsiya
-./configure --with-pjproject-bundled --with-jansson-bundled
-make menuselect.makeopts
+### 3.5. Konfiguratsiya (configure)
 
-# res_odbc va res_config_odbc yoqilganligini tekshirish
-# make menuselect  # (ixtiyoriy — interaktiv tartibda tanlash)
+```bash
+sudo ./configure
+```
 
-make -j$(nproc)
+Muvaffaqiyatli tugagandan so'ng, Asterisk logotipi ko'rinadi.
+
+### 3.6. Menuselect — modullarni tanlash
+
+```bash
+sudo make menuselect
+```
+
+> ⚡ **Muhim tanlashlar:**
+> - **Add-ons** — kerakli qo'shimchalarni yoqing
+> - **Core Sound Packages** — rus (`ru`) va ingliz (`en`) ovoz paketlarini tanlang
+> - **Music on Hold** — kerakli formatlarni tanlang
+> - **Resource Modules** — `res_odbc` va `res_config_odbc` **yoqilgan** bo'lishi kerak!
+>
+> Tugallangach, `Save & Exit` ni tanlang.
+
+### 3.7. Kompilatsiya
+
+```bash
+sudo make -j$(nproc)
+```
+
+### 3.8. O'rnatish
+
+```bash
 sudo make install
-sudo make samples       # Namuna konfiguratsiya fayllari
-sudo make config        # Systemd service fayllarini o'rnatish
+```
+
+### 3.9. Konfiguratsiya fayllarini o'rnatish
+
+```bash
+sudo make samples
+```
+
+### 3.10. Ishga tushirish skriptlarini o'rnatish
+
+```bash
+sudo make config
 sudo ldconfig
 ```
 
-### 2.2. Asterisk foydalanuvchisini sozlash
+### 3.11. Asterisk xizmatini sozlash
+
+```bash
+sudo systemctl enable asterisk
+sudo systemctl start asterisk
+```
+
+### 3.12. O'rnatishni tekshirish
+
+```bash
+sudo asterisk -rvvv
+```
+
+Asterisk konsoli ochilib, versiya ma'lumoti ko'rinishi kerak. Chiqish uchun `exit`.
+
+### 3.13. Asterisk foydalanuvchisini sozlash
 
 ```bash
 sudo groupadd asterisk 2>/dev/null
@@ -192,7 +288,7 @@ sudo chown -R asterisk:asterisk /etc/asterisk
 sudo chown -R asterisk:asterisk /var/{lib,log,spool,run}/asterisk
 ```
 
-### 2.3. Konfiguratsiya fayllarini deploy qilish
+### 3.14. Proyekt konfiguratsiyalarini deploy qilish
 
 Proyektdagi tayyor konfiguratsiya fayllarini `/etc/asterisk/` ga ko'chirish:
 
@@ -210,7 +306,7 @@ sudo chown -R asterisk:asterisk /etc/asterisk
 > - `extensions.conf` — Dialplan (`from-internal` kontekst)
 > - `modules.conf` — Modul yuklash tartibi (res_odbc preload)
 
-### 2.4. http.conf da SSL sozlash (Ixtiyoriy)
+### 3.15. (Ixtiyoriy) http.conf da SSL sozlash
 
 Agar SSL ishlatmoqchi bo'lsangiz, `/etc/asterisk/http.conf` da TLS sertifikat yo'llarini o'zgartiring:
 
@@ -219,21 +315,19 @@ tlscertfile=/etc/letsencrypt/live/yourdomain.uz/cert.pem
 tlsprivatekey=/etc/letsencrypt/live/yourdomain.uz/privkey.pem
 ```
 
-### 2.5. Asteriskni ishga tushirish
+### 3.16. Asteriskni qayta ishga tushirish (deploy dan keyin)
 
 ```bash
-sudo systemctl start asterisk
-sudo systemctl enable asterisk
-sudo systemctl status asterisk
+sudo systemctl restart asterisk
 ```
 
-### 2.6. Ulanishni tekshirish
+### 3.17. To'liq tekshirish
 
 ```bash
 sudo asterisk -rvvv
 ```
 
-Asterisk konsolida:
+Asterisk konsolida quyidagilarni tekshiring:
 
 ```
 pjsip show transports    # UDP va TCP transportlar ko'rinishi kerak
@@ -243,17 +337,17 @@ ari show users            # onecall useri ko'rinishi kerak
 
 ---
 
-## 3. ODBC o'rnatish
+## 4. ODBC o'rnatish
 
 ODBC — Asterisk bilan PostgreSQL o'rtasidagi ko'prik. Bu orqali Asterisk PJSIP endpointlarni to'g'ridan-to'g'ri bazadan o'qiydi.
 
-### 3.1. ODBC drayverlarini o'rnatish
+### 4.1. ODBC drayverlarini o'rnatish
 
 ```bash
 sudo apt install -y unixodbc unixodbc-dev odbc-postgresql
 ```
 
-### 3.2. ODBC drayverini ro'yxatdan o'tkazish
+### 4.2. ODBC drayverini ro'yxatdan o'tkazish
 
 Drayver yo'lini tekshiring:
 
@@ -279,7 +373,7 @@ Threading   = 2
 
 > ⚠️ `Driver` yo'li yuqoridagi `find` natijasiga mos kelishi kerak.
 
-### 3.3. DSN sozlash
+### 4.3. DSN sozlash
 
 Proyektdagi tayyor `odbc.ini` ni ko'chirish:
 
@@ -306,7 +400,7 @@ Password    = 11221122
 
 > ⚡ **Muhim:** DSN nomi `asterisk` bo'lishi kerak — `res_odbc.conf` dagi `dsn => asterisk` ga mos kelishi uchun.
 
-### 3.4. ODBC ulanishni tekshirish
+### 4.4. ODBC ulanishni tekshirish
 
 ```bash
 isql -v asterisk onecall 11221122
@@ -326,7 +420,7 @@ Muvaffaqiyatli natija:
 
 `quit` bilan chiqing.
 
-### 3.5. Asterisk ODBC ulanishni tekshirish
+### 4.5. Asterisk ODBC ulanishni tekshirish
 
 ```bash
 sudo asterisk -rx "odbc show"
@@ -346,9 +440,9 @@ ODBC DSN Settings
 
 ---
 
-## 4. PHP 8.3 o'rnatish
+## 5. PHP 8.3 o'rnatish
 
-### 4.1. PHP repository qo'shish
+### 5.1. PHP repository qo'shish
 
 ```bash
 sudo apt install -y software-properties-common
@@ -356,7 +450,7 @@ sudo add-apt-repository ppa:ondrej/php -y
 sudo apt update
 ```
 
-### 4.2. PHP 8.3 va kerakli extensionlarni o'rnatish
+### 5.2. PHP 8.3 va kerakli extensionlarni o'rnatish
 
 ```bash
 sudo apt install -y \
@@ -376,7 +470,7 @@ sudo apt install -y \
     php8.3-odbc
 ```
 
-### 4.3. PHP-FPM ni ishga tushirish
+### 5.3. PHP-FPM ni ishga tushirish
 
 ```bash
 sudo systemctl start php8.3-fpm
@@ -384,13 +478,13 @@ sudo systemctl enable php8.3-fpm
 sudo systemctl status php8.3-fpm
 ```
 
-### 4.4. O'rnatilgan extensionlarni tekshirish
+### 5.4. O'rnatilgan extensionlarni tekshirish
 
 ```bash
 php -m | grep -iE 'pgsql|mbstring|xml|curl|zip|bcmath|intl|gd|tokenizer|fileinfo|dom|odbc|pdo'
 ```
 
-### 4.5. Composer o'rnatish
+### 5.5. Composer o'rnatish
 
 ```bash
 curl -sS https://getcomposer.org/installer | php
@@ -398,7 +492,7 @@ sudo mv composer.phar /usr/local/bin/composer
 composer --version
 ```
 
-### 4.6. Node.js va NPM o'rnatish
+### 5.6. Node.js va NPM o'rnatish
 
 ```bash
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
@@ -409,31 +503,22 @@ npm --version
 
 ---
 
-## 5. Proyektni ishga tushirish
+## 6. Proyektni ishga tushirish
 
-### 5.1. Proyektni klonlash
-
-```bash
-cd /var/www
-sudo git clone <REPOSITORY_URL> 1call
-sudo chown -R www-data:www-data /var/www/1call
-cd /var/www/1call
-```
-
-### 5.2. PHP kutubxonalarini o'rnatish
+### 6.1. PHP kutubxonalarini o'rnatish
 
 ```bash
 composer install --optimize-autoloader --no-dev
 ```
 
-### 5.3. Node kutubxonalarini o'rnatish va build qilish
+### 6.2. Node kutubxonalarini o'rnatish va build qilish
 
 ```bash
 npm install
 npm run build
 ```
 
-### 5.4. `.env` faylini sozlash
+### 6.3. `.env` faylini sozlash
 
 ```bash
 cp .env.example .env
@@ -467,25 +552,25 @@ ARI_PASSWORD=11221122
 ARI_APP=onecall
 ```
 
-### 5.5. Ma'lumotlar bazasini migratsiya qilish
+### 6.4. Ma'lumotlar bazasini migratsiya qilish
 
 ```bash
 php artisan migrate --force
 ```
 
-### 5.6. Seed ma'lumotlarini yuklash
+### 6.5. Seed ma'lumotlarini yuklash
 
 ```bash
 php artisan db:seed
 ```
 
-### 5.7. Storage linkini yaratish
+### 6.6. Storage linkini yaratish
 
 ```bash
 php artisan storage:link
 ```
 
-### 5.8. Keshlarni optimallashtirish (Production)
+### 6.7. Keshlarni optimallashtirish (Production)
 
 ```bash
 php artisan config:cache
@@ -493,7 +578,7 @@ php artisan route:cache
 php artisan view:cache
 ```
 
-### 5.9. Huquqlarni sozlash
+### 6.8. Huquqlarni sozlash
 
 ```bash
 sudo chown -R www-data:www-data /var/www/1call
@@ -501,7 +586,7 @@ sudo chmod -R 775 /var/www/1call/storage
 sudo chmod -R 775 /var/www/1call/bootstrap/cache
 ```
 
-### 5.10. ARI listenerni ishga tushirish
+### 6.9. ARI listenerni ishga tushirish
 
 ARI listener fon rejimida ishlashi kerak. Systemd service yarating:
 
@@ -533,7 +618,7 @@ sudo systemctl enable onecall-ari
 sudo systemctl status onecall-ari
 ```
 
-### 5.11. Barcha xizmatlarni tekshirish
+### 6.10. Barcha xizmatlarni tekshirish
 
 Barcha xizmatlar ishlayotganini tekshiring:
 
@@ -554,7 +639,7 @@ sudo systemctl status asterisk
 sudo systemctl status onecall-ari
 ```
 
-### 5.12. Brauzerda tekshirish
+### 6.11. Brauzerda tekshirish
 
 Brauzerda `https://yourdomain.uz` ni oching.
 
