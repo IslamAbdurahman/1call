@@ -5,15 +5,29 @@ namespace App\Http\Controllers;
 use App\Models\Operator;
 use App\Models\Group;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Inertia\Inertia;
 
 class OperatorController extends Controller
 {
     public function index()
     {
+        // Get online extensions from ps_contacts (Asterisk PJSIP realtime)
+        $onlineExtensions = [];
+        if (Schema::hasTable('ps_contacts')) {
+            $onlineExtensions = DB::table('ps_contacts')
+                ->whereNotNull('endpoint')
+                ->pluck('endpoint')
+                ->unique()
+                ->values()
+                ->toArray();
+        }
+
         return Inertia::render('operators/index', [
             'operators' => Operator::with('group')->get(),
-            'groups' => Group::all()
+            'groups' => Group::all(),
+            'onlineExtensions' => $onlineExtensions,
         ]);
     }
 

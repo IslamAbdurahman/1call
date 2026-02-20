@@ -11,6 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('extension')->unique();
+            $table->string('password')->default('1234');
             $table->foreignId('group_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });

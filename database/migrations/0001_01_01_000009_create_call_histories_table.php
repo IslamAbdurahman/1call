@@ -24,6 +24,13 @@ return new class extends Migration {
             $table->string('auto_call_id')->nullable();
             $table->string('call_id')->nullable();
             $table->timestamps();
+
+            // Performance indexes
+            $table->index('date_time');
+            $table->index('status');
+            $table->index('type');
+            $table->index('src');
+            $table->index('dst');
         });
     }
 

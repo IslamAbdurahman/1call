@@ -51,7 +51,14 @@ class CallingService
 
         $called = $event['channel']['dialplan']['exten'] ?? 'Unknown';
 
-        Log::info("📞 NEW INBOUND CALL", ['caller' => $caller, 'channel' => $inboundChannelId]);
+        Log::info("📞 NEW INBOUND CALL", ['caller' => $caller, 'called' => $called, 'channel' => $inboundChannelId]);
+
+        // O'ziga qo'ng'iroq qilishni oldini olish (101 → 101)
+        if ($caller === $called) {
+            Log::warning("🚫 Self-call blocked: {$caller} → {$called}");
+            $this->hangupChannel($inboundChannelId);
+            return;
+        }
 
         // 1. Mijozga "Ringing" (chaqiruv ketyapti) signali yuboriladi, go'shak ko'tarilmaydi!
         $this->indicateRinging($inboundChannelId);
@@ -66,7 +73,15 @@ class CallingService
         // 3. Routing
         $sipNumber = SipNumber::where('number', $called)->with('group.operators')->first();
         if ($sipNumber && $sipNumber->group_id && $sipNumber->group->operators->count() > 0) {
-            $operator = $sipNumber->group->operators->first(); // Bu yerda operatorlar bandligini tekshirish kerak
+            // Routing orqali self-call oldini olish: o'zidan boshqa operatorni tanla
+            $availableOperators = $sipNumber->group->operators->filter(fn($op) => $op->extension !== $caller);
+            if ($availableOperators->isEmpty()) {
+                Log::warning("🚫 Self-call blocked via routing: {$caller} → group has no other operators");
+                $this->destroyBridge($bridgeId);
+                $this->hangupChannel($inboundChannelId);
+                return;
+            }
+            $operator = $availableOperators->first();
             $targetEndpoint = "PJSIP/{$operator->extension}";
         }
         else {

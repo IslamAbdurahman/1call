@@ -2,7 +2,7 @@ import { Head, useForm, router } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import AppLayout from '@/layouts/app-layout';
 import { useState } from 'react';
-import { Pencil, Trash2, Plus, Search, Headset, X } from 'lucide-react';
+import { Pencil, Trash2, Plus, Search, Headset, X, Wifi, WifiOff } from 'lucide-react';
 
 interface Operator {
     id: number;
@@ -18,7 +18,7 @@ interface Group {
     name: string;
 }
 
-export default function OperatorsIndex({ operators, groups }: { operators: Operator[]; groups: Group[] }) {
+export default function OperatorsIndex({ operators, groups, onlineExtensions = [] }: { operators: Operator[]; groups: Group[]; onlineExtensions: string[] }) {
     const { t } = useTranslation();
     const { data, setData, post, processing, reset, errors } = useForm({
         name: '', extension: '', password: '', group_id: '',
@@ -27,14 +27,23 @@ export default function OperatorsIndex({ operators, groups }: { operators: Opera
     const [isOpen, setIsOpen] = useState(false);
     const [search, setSearch] = useState('');
     const [groupFilter, setGroupFilter] = useState('');
+    const [statusFilter, setStatusFilter] = useState('');
+
+    const isOnline = (extension: string) => onlineExtensions.includes(extension);
 
     const filtered = operators.filter(op => {
         const matchSearch = !search ||
             op.name.toLowerCase().includes(search.toLowerCase()) ||
             op.extension.includes(search);
         const matchGroup = !groupFilter || op.group_id?.toString() === groupFilter;
-        return matchSearch && matchGroup;
+        const matchStatus = !statusFilter ||
+            (statusFilter === 'online' && isOnline(op.extension)) ||
+            (statusFilter === 'offline' && !isOnline(op.extension));
+        return matchSearch && matchGroup && matchStatus;
     });
+
+    const onlineCount = operators.filter(op => isOnline(op.extension)).length;
+    const offlineCount = operators.length - onlineCount;
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -73,7 +82,21 @@ export default function OperatorsIndex({ operators, groups }: { operators: Opera
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('operators.title')}</h1>
-                        <p className="text-sm text-gray-500 mt-0.5">{t('operators.total', { count: operators.length })}</p>
+                        <div className="flex items-center gap-3 mt-1">
+                            <p className="text-sm text-gray-500">{t('operators.total', { count: operators.length })}</p>
+                            <span className="text-gray-300 dark:text-gray-600">|</span>
+                            <div className="flex items-center gap-1.5">
+                                <span className="relative flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                </span>
+                                <span className="text-sm text-green-600 dark:text-green-400 font-medium">{onlineCount}</span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <span className="inline-flex rounded-full h-2 w-2 bg-gray-300 dark:bg-gray-600"></span>
+                                <span className="text-sm text-gray-400 font-medium">{offlineCount}</span>
+                            </div>
+                        </div>
                     </div>
                     <button onClick={openCreate} className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm">
                         <Plus className="w-4 h-4" />{t('operators.addOperator')}
@@ -100,8 +123,17 @@ export default function OperatorsIndex({ operators, groups }: { operators: Opera
                         <option value="">{t('common.allGroups')}</option>
                         {groups.map(g => <option key={g.id} value={g.id.toString()}>{g.name}</option>)}
                     </select>
-                    {(search || groupFilter) && (
-                        <button onClick={() => { setSearch(''); setGroupFilter(''); }} className="px-3 py-2 text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+                    <select
+                        value={statusFilter}
+                        onChange={e => setStatusFilter(e.target.value)}
+                        className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none"
+                    >
+                        <option value="">{t('operators.allStatuses')}</option>
+                        <option value="online">{t('operators.online')}</option>
+                        <option value="offline">{t('operators.offline')}</option>
+                    </select>
+                    {(search || groupFilter || statusFilter) && (
+                        <button onClick={() => { setSearch(''); setGroupFilter(''); setStatusFilter(''); }} className="px-3 py-2 text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
                             <X className="w-3 h-3" />{t('common.clear')}
                         </button>
                     )}
@@ -117,52 +149,76 @@ export default function OperatorsIndex({ operators, groups }: { operators: Opera
                                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('common.name')}</th>
                                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('operators.extension')}</th>
                                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('common.group')}</th>
+                                    <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('operators.status')}</th>
                                     <th className="px-4 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('common.actions')}</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
                                 {filtered.length === 0 ? (
                                     <tr>
-                                        <td colSpan={5} className="px-4 py-12 text-center">
+                                        <td colSpan={6} className="px-4 py-12 text-center">
                                             <div className="flex flex-col items-center gap-2 text-gray-400">
                                                 <Headset className="w-10 h-10 opacity-30" />
                                                 <p className="text-sm">{t('operators.notFound')}</p>
                                             </div>
                                         </td>
                                     </tr>
-                                ) : filtered.map(op => (
-                                    <tr key={op.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/40 transition-colors">
-                                        <td className="px-4 py-3 text-xs text-gray-400 font-mono">{op.id}</td>
-                                        <td className="px-4 py-3">
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-indigo-600 dark:text-indigo-300 text-xs font-bold">
-                                                    {op.name.charAt(0).toUpperCase()}
+                                ) : filtered.map(op => {
+                                    const online = isOnline(op.extension);
+                                    return (
+                                        <tr key={op.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/40 transition-colors">
+                                            <td className="px-4 py-3 text-xs text-gray-400 font-mono">{op.id}</td>
+                                            <td className="px-4 py-3">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="relative">
+                                                        <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-indigo-600 dark:text-indigo-300 text-xs font-bold">
+                                                            {op.name.charAt(0).toUpperCase()}
+                                                        </div>
+                                                        {/* Small status dot on avatar */}
+                                                        <span className={`absolute -bottom-0.5 -right-0.5 block h-2.5 w-2.5 rounded-full ring-2 ring-white dark:ring-gray-800 ${online ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'}`} />
+                                                    </div>
+                                                    <span className="font-medium text-gray-900 dark:text-white">{op.name}</span>
                                                 </div>
-                                                <span className="font-medium text-gray-900 dark:text-white">{op.name}</span>
-                                            </div>
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            <span className="font-mono text-sm bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded text-gray-700 dark:text-gray-200">{op.extension}</span>
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            {op.group ? (
-                                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300">
-                                                    {op.group.name}
-                                                </span>
-                                            ) : <span className="text-gray-400 text-xs">—</span>}
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            <div className="flex items-center justify-end gap-1">
-                                                <button onClick={() => openEdit(op)} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors">
-                                                    <Pencil className="w-4 h-4" />
-                                                </button>
-                                                <button onClick={() => handleDelete(op.id)} className="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/30 text-red-500 transition-colors">
-                                                    <Trash2 className="w-4 h-4" />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                <span className="font-mono text-sm bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded text-gray-700 dark:text-gray-200">{op.extension}</span>
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                {op.group ? (
+                                                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300">
+                                                        {op.group.name}
+                                                    </span>
+                                                ) : <span className="text-gray-400 text-xs">—</span>}
+                                            </td>
+                                            <td className="px-4 py-3 text-center">
+                                                {online ? (
+                                                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800">
+                                                        <span className="relative flex h-1.5 w-1.5">
+                                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                                            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
+                                                        </span>
+                                                        {t('operators.online')}
+                                                    </span>
+                                                ) : (
+                                                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-gray-50 text-gray-500 dark:bg-gray-700 dark:text-gray-400 border border-gray-200 dark:border-gray-600">
+                                                        <span className="inline-flex rounded-full h-1.5 w-1.5 bg-gray-300 dark:bg-gray-500"></span>
+                                                        {t('operators.offline')}
+                                                    </span>
+                                                )}
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                <div className="flex items-center justify-end gap-1">
+                                                    <button onClick={() => openEdit(op)} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors">
+                                                        <Pencil className="w-4 h-4" />
+                                                    </button>
+                                                    <button onClick={() => handleDelete(op.id)} className="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/30 text-red-500 transition-colors">
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>
