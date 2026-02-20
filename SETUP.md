@@ -349,45 +349,34 @@ sudo apt install -y unixodbc unixodbc-dev odbc-postgresql
 
 ### 4.2. ODBC drayverini ro'yxatdan o'tkazish
 
-Drayver yo'lini tekshiring:
+Avval drayver yo'lini tekshiring:
 
 ```bash
 find / -name "psqlodbcw.so" 2>/dev/null
 # Odatda: /usr/lib/x86_64-linux-gnu/odbc/psqlodbcw.so
 ```
 
-`/etc/odbcinst.ini` faylini sozlang:
+`/etc/odbcinst.ini` faylini yozing (drayver yo'li yuqoridagi natijaga mos bo'lishi kerak):
 
 ```bash
-sudo nano /etc/odbcinst.ini
-```
-
-```ini
+sudo tee /etc/odbcinst.ini << 'EOF'
 [PostgreSQL]
 Description = PostgreSQL ODBC driver (Unicode)
 Driver      = /usr/lib/x86_64-linux-gnu/odbc/psqlodbcw.so
 Setup       = /usr/lib/x86_64-linux-gnu/odbc/libodbcpsqlS.so
 UsageCount  = 1
 Threading   = 2
+EOF
 ```
 
 > ⚠️ `Driver` yo'li yuqoridagi `find` natijasiga mos kelishi kerak.
 
 ### 4.3. DSN sozlash
 
-Proyektdagi tayyor `odbc.ini` ni ko'chirish:
+`/etc/odbc.ini` faylini yozing:
 
 ```bash
-sudo cp /var/www/1call/deploy/odbc.ini /etc/odbc.ini
-```
-
-Yoki qo'lda yaratish:
-
-```bash
-sudo nano /etc/odbc.ini
-```
-
-```ini
+sudo tee /etc/odbc.ini << 'EOF'
 [asterisk]
 Driver      = PostgreSQL
 Description = PostgreSQL Data Source
@@ -396,9 +385,11 @@ Port        = 5432
 Database    = onecall
 UserName    = onecall
 Password    = 11221122
+EOF
 ```
 
-> ⚡ **Muhim:** DSN nomi `asterisk` bo'lishi kerak — `res_odbc.conf` dagi `dsn => asterisk` ga mos kelishi uchun.
+> ⚡ **Muhim:** DSN nomi `[asterisk]` bo'lishi **shart** — `res_odbc.conf` dagi `dsn => asterisk` ga mos kelishi uchun.
+> Agar DSN nomi boshqacha bo'lsa, `Data source name not found` xatosi chiqadi!
 
 ### 4.4. ODBC ulanishni tekshirish
 
@@ -422,6 +413,14 @@ Muvaffaqiyatli natija:
 
 ### 4.5. Asterisk ODBC ulanishni tekshirish
 
+ODBC sozlangandan keyin Asteriskni qayta ishga tushiring:
+
+```bash
+sudo systemctl restart asterisk
+```
+
+Keyin tekshiring:
+
 ```bash
 sudo asterisk -rx "odbc show"
 ```
@@ -437,6 +436,8 @@ ODBC DSN Settings
     Pooled: No
     Connected: Yes
 ```
+
+Agar `Connected: Yes` ko'rinsangiz — ODBC to'g'ri ishlayapti! ✅
 
 ---
 
