@@ -30,7 +30,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('operators', App\Http\Controllers\OperatorController::class);
         Route::resource('sip-numbers', App\Http\Controllers\SipNumberController::class)->parameters(['sip-numbers' => 'sipNumber']);
         Route::resource('contacts', App\Http\Controllers\ContactController::class);
-        Route::resource('call-logs', App\Http\Controllers\CallLogController::class)->only(['index']);
 
         Route::resource('call-histories', App\Http\Controllers\CallHistoryController::class)->only(['index']);
         Route::get('call-histories/{callHistory}/play', [App\Http\Controllers\CallHistoryController::class , 'playRecording'])

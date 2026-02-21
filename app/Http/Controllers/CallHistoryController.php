@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CallHistory;
+use App\Models\Contact;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -16,11 +17,18 @@ class CallHistoryController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function ($q) use ($search) {
+            // Kontakt nomi bo'yicha telefon raqamlarini topish
+            $contactPhones = Contact::where('name', 'ilike', "%{$search}%")->pluck('phone')->toArray();
+
+            $query->where(function ($q) use ($search, $contactPhones) {
                 $q->where('src', 'ilike', "%{$search}%")
                     ->orWhere('dst', 'ilike', "%{$search}%")
                     ->orWhere('external_number', 'ilike', "%{$search}%")
                     ->orWhere('call_id', 'ilike', "%{$search}%");
+
+                if (!empty($contactPhones)) {
+                    $q->orWhereIn('external_number', $contactPhones);
+                }
             });
         }
 

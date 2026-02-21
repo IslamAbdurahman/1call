@@ -24,6 +24,7 @@ interface CallHistoryItem {
     src: string | null;
     dst: string | null;
     external_number: string | null;
+    contact_name: string | null;
     duration: number;
     conversation: string | null;
     type: string | null;
@@ -384,7 +385,16 @@ export default function CallHistoriesIndex({ histories, filters }: Props) {
                                             <td className="px-4 py-3 whitespace-nowrap text-gray-700 dark:text-gray-200 text-xs">{formatDateTime(h.date_time)}</td>
                                             <td className="px-4 py-3 font-mono text-xs text-gray-700 dark:text-gray-200">{h.src ?? '—'}</td>
                                             <td className="px-4 py-3 font-mono text-xs text-gray-700 dark:text-gray-200">{h.dst ?? '—'}</td>
-                                            <td className="px-4 py-3 font-mono text-xs text-gray-700 dark:text-gray-200">{h.external_number ?? '—'}</td>
+                                            <td className="px-4 py-3 text-xs">
+                                                {h.external_number ? (
+                                                    <div>
+                                                        {h.contact_name && (
+                                                            <div className="font-semibold text-gray-900 dark:text-white">{h.contact_name}</div>
+                                                        )}
+                                                        <div className={`font-mono ${h.contact_name ? 'text-gray-400 dark:text-gray-500 text-[11px]' : 'text-gray-700 dark:text-gray-200'}`}>{h.external_number}</div>
+                                                    </div>
+                                                ) : '—'}
+                                            </td>
                                             <td className="px-4 py-3 text-xs text-gray-700 dark:text-gray-200 font-mono">
                                                 {formatDuration(h.duration)}
                                             </td>
