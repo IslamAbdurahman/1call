@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
 
-        \App\Models\Operator::observe(\App\Observers\OperatorObserver::class);
+        \App\Models\User::observe(\App\Observers\UserObserver::class);
     }
 
     /**

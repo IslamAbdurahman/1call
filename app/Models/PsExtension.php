@@ -35,6 +35,6 @@ class PsExtension extends Model
         'context' => 'from-internal',
         'priority' => 1,
         'app' => 'Stasis',
-        'appdata' => 'onecall',
+        'appdata' => '1call',
     ];
 }

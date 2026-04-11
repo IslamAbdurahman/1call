@@ -2,48 +2,72 @@
 
 namespace App\Observers;
 
-use App\Models\Operator;
+use App\Models\User;
 use App\Models\PsAor;
 use App\Models\PsAuth;
 use App\Models\PsEndpoint;
-use App\Models\PsExtension; // PsExtension modelini yaratishingiz kerak
+use App\Models\PsExtension;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class OperatorObserver
+class UserObserver
 {
     private const CONTEXT = 'from-internal';
     private const TRANSPORT = 'transport-tcp';
     private const ALLOW = 'ulaw,alaw';
     private const APP = 'Stasis';
-    private const APP_DATA = 'onecall';
+    private const APP_DATA = '1call';
 
-    public function created(Operator $operator): void
+    /**
+     * Handle the User "created" event.
+     */
+    public function created(User $user): void
     {
-        $this->syncAsteriskObjects($operator);
-    }
-
-    public function updated(Operator $operator): void
-    {
-        if ($operator->isDirty('extension')) {
-            $this->deleteAsteriskObjects($operator->getOriginal('extension'));
+        // Spatie roli bo'lsa yoki extension mavjud bo'lsa
+        if ($user->hasRole('operator') || $user->extension) {
+            $this->syncAsteriskObjects($user);
         }
-        $this->syncAsteriskObjects($operator);
     }
 
-    public function deleted(Operator $operator): void
+    /**
+     * Handle the User "updated" event.
+     */
+    public function updated(User $user): void
     {
-        $this->deleteAsteriskObjects($operator->extension);
+        // Agar extension o'zgarsa, eskisini o'chirib, yangisini yaratamiz
+        if ($user->isDirty('extension') && $user->getOriginal('extension')) {
+            $this->deleteAsteriskObjects($user->getOriginal('extension'));
+        }
+
+        // Faqat operatorlar uchun sinxronizatsiya qilamiz
+        if ($user->hasRole('operator') || $user->extension) {
+            $this->syncAsteriskObjects($user);
+        } else {
+            // Agar roli o'zgargan bo'lsa (operatorlikdan chiqarilgan bo'lsa)
+            $this->deleteAsteriskObjects($user->extension);
+        }
+    }
+
+    /**
+     * Handle the User "deleted" event.
+     */
+    public function deleted(User $user): void
+    {
+        if ($user->extension) {
+            $this->deleteAsteriskObjects($user->extension);
+        }
     }
 
     /**
      * Asterisk obyektlarini yaratish va yangilash (Sinxronizatsiya)
      */
-    private function syncAsteriskObjects(Operator $operator): void
+    private function syncAsteriskObjects(User $user): void
     {
+        if (!$user->extension) return;
+
         try {
-            DB::transaction(function () use ($operator) {
-                $ext = $operator->extension;
+            DB::transaction(function () use ($user) {
+                $ext = $user->extension;
 
                 // 1. AOR (Address of Record)
                 PsAor::updateOrCreate(['id' => $ext], [
@@ -56,7 +80,7 @@ class OperatorObserver
                 PsAuth::updateOrCreate(['id' => $ext], [
                     'auth_type' => 'userpass',
                     'username' => $ext,
-                    'password' => $operator->password,
+                    'password' => $user->sip_password ?? '1234',
                 ]);
 
                 // 3. Endpoint
@@ -75,7 +99,6 @@ class OperatorObserver
                 ]);
 
                 // 4. PsExtension (Dialplan yo'naltirish)
-                // Bu qism har bir operator uchun ARI (Stasis) ga yo'naltirish qoidasini yaratadi
                 PsExtension::updateOrCreate(
                     ['context' => self::CONTEXT, 'exten' => $ext],
                     [
@@ -86,12 +109,17 @@ class OperatorObserver
                 );
             });
         } catch (\Exception $e) {
-            Log::error("Asterisk sync failed for {$operator->extension}: " . $e->getMessage());
+            Log::error("Asterisk sync failed for {$user->extension}: " . $e->getMessage());
         }
     }
 
-    private function deleteAsteriskObjects(string $extension): void
+    /**
+     * Asterisk obyektlarini o'chirish
+     */
+    private function deleteAsteriskObjects(?string $extension): void
     {
+        if (!$extension) return;
+
         PsEndpoint::where('id', $extension)->delete();
         PsAuth::where('id', $extension)->delete();
         PsAor::where('id', $extension)->delete();

@@ -1,6 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
-import { BookOpen, Folder, LayoutGrid, Users, Headset, Phone, Contact, History } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Users, Headset, Phone, Contact, History, MessageSquare } from 'lucide-react';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -28,6 +28,7 @@ export function AppSidebar() {
         { title: t('sidebar.sipNumbers'), href: '/sip-numbers', icon: Phone },
         { title: t('sidebar.contacts'), href: '/contacts', icon: Contact },
         { title: t('sidebar.callHistory'), href: '/call-histories', icon: History },
+        { title: t('sidebar.chat'), href: '/chat', icon: MessageSquare },
     ];
 
     const footerNavItems: NavItem[] = [

@@ -35,12 +35,13 @@
         "contacts": "Контакты",
         "callLogs": "Журнал звонков",
         "callHistory": "История звонков",
+        "chat": "Чат",
         "repository": "Репозиторий",
         "documentation": "Документация"
     },
     "dashboard": {
         "title": "Панель управления",
-        "subtitle": "Панель управления колл-центра OneCall",
+        "subtitle": "Панель управления колл-центра 1Call",
         "groups": "Группы",
         "operators": "Операторы",
         "sipNumbers": "SIP Номера",

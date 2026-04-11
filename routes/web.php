@@ -15,7 +15,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return Inertia::render('dashboard', [
             'stats' => [
             'groups' => \App\Models\Group::count(),
-            'operators' => \App\Models\Operator::count(),
+            'operators' => \App\Models\User::role('operator')->count(),
             'sipNumbers' => \App\Models\SipNumber::count(),
             'contacts' => \App\Models\Contact::count(),
             'callsToday' => \App\Models\CallHistory::whereDate('date_time', today())->count(),
@@ -34,6 +34,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('call-histories', App\Http\Controllers\CallHistoryController::class)->only(['index']);
         Route::get('call-histories/{callHistory}/play', [App\Http\Controllers\CallHistoryController::class , 'playRecording'])
             ->name('call-histories.play');
+
+        Route::get('/chat', [App\Http\Controllers\ChatController::class, 'index'])->name('chat.index');
+        Route::post('/chat', [App\Http\Controllers\ChatController::class, 'store'])->name('chat.store');
     });
 
 require __DIR__ . '/settings.php';

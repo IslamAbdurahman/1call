@@ -1,4 +1,4 @@
-# 🚀 OneCall — O'rnatish qo'llanmasi
+# 🚀 1Call — O'rnatish qo'llanmasi
 
 > Call center tizimini noldan o'rnatish uchun to'liq qo'llanma.
 > **OS:** Ubuntu 22.04/24.04 LTS (Debian based)
@@ -39,7 +39,7 @@ sudo systemctl status nginx
 Yangi sayt konfiguratsiyasini yarating:
 
 ```bash
-sudo nano /etc/nginx/sites-available/onecall
+sudo nano /etc/nginx/sites-available/1call
 ```
 
 Quyidagi konfiguratsiyani yozing:
@@ -92,7 +92,7 @@ server {
 ### 0.4. Saytni yoqish
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/onecall /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/1call /etc/nginx/sites-enabled/
 sudo rm -f /etc/nginx/sites-enabled/default   # Default saytni o'chirish
 sudo nginx -t                                   # Konfiguratsiyani tekshirish
 sudo systemctl reload nginx
@@ -132,16 +132,16 @@ sudo -u postgres psql
 PostgreSQL konsolida quyidagilarni bajaring:
 
 ```sql
-CREATE USER onecall WITH PASSWORD '11221122';
-CREATE DATABASE onecall OWNER onecall;
-GRANT ALL PRIVILEGES ON DATABASE onecall TO onecall;
+CREATE USER "1call" WITH PASSWORD '11221122';
+CREATE DATABASE "1call" OWNER "1call";
+GRANT ALL PRIVILEGES ON DATABASE "1call" TO "1call";
 \q
 ```
 
 ### 1.4. Ulanishni tekshirish
 
 ```bash
-psql -h 127.0.0.1 -U onecall -d onecall
+psql -h 127.0.0.1 -U 1call -d 1call
 # Parol so'ralganda: 11221122
 ```
 
@@ -298,7 +298,7 @@ sudo chown -R asterisk:asterisk /etc/asterisk
 ```
 
 > ⚡ **Muhim:** `deploy/asterisk/` papkasida barcha kerakli konfiguratsiyalar mavjud:
-> - `ari.conf` — ARI interfeysi (user: `onecall`, password: `11221122`)
+> - `ari.conf` — ARI interfeysi (user: `1call`, password: `11221122`)
 > - `http.conf` — HTTP server (port: 8088)
 > - `pjsip.conf` — SIP transport sozlamalari (UDP + TCP)
 > - `extconfig.conf` — Realtime ODBC mapping (PJSIP jadvallari)
@@ -332,7 +332,7 @@ Asterisk konsolida quyidagilarni tekshiring:
 ```
 pjsip show transports    # UDP va TCP transportlar ko'rinishi kerak
 module show like odbc     # res_odbc va res_config_odbc yuklangan bo'lishi kerak
-ari show users            # onecall useri ko'rinishi kerak
+ari show users            # 1call useri ko'rinishi kerak
 ```
 
 ---
@@ -352,8 +352,8 @@ sudo apt install -y unixodbc unixodbc-dev odbc-postgresql
 Avval drayver yo'lini tekshiring:
 
 ```bash
-find / -name "psqlodbcw.so" 2>/dev/null
-# Odatda: /usr/lib/x86_64-linux-gnu/odbc/psqlodbcw.so
+find /usr/lib -name "libmyodbc8w.so" 2>/dev/null
+# Odatda: /usr/lib/x86_64-linux-gnu/odbc/libmyodbc8w.so yoki /usr/lib/libmyodbc8w.so
 ```
 
 `/etc/odbcinst.ini` faylini yozing (drayver yo'li yuqoridagi natijaga mos bo'lishi kerak):
@@ -369,8 +369,6 @@ Threading   = 2
 EOF
 ```
 
-> ⚠️ `Driver` yo'li yuqoridagi `find` natijasiga mos kelishi kerak.
-
 ### 4.3. DSN sozlash
 
 `/etc/odbc.ini` faylini yozing:
@@ -382,8 +380,8 @@ Driver      = PostgreSQL
 Description = PostgreSQL Data Source
 Servername  = 127.0.0.1
 Port        = 5432
-Database    = onecall
-UserName    = onecall
+Database    = 1call
+UserName    = 1call
 Password    = 11221122
 EOF
 ```
@@ -394,7 +392,7 @@ EOF
 ### 4.4. ODBC ulanishni tekshirish
 
 ```bash
-isql -v asterisk onecall 11221122
+isql -v asterisk 1call 11221122
 ```
 
 Muvaffaqiyatli natija:
@@ -535,7 +533,7 @@ nano .env
 Asosiy sozlamalar:
 
 ```env
-APP_NAME=OneCall
+APP_NAME=1Call
 APP_ENV=production
 APP_DEBUG=false
 APP_URL=https://yourdomain.uz
@@ -543,14 +541,14 @@ APP_URL=https://yourdomain.uz
 DB_CONNECTION=pgsql
 DB_HOST=127.0.0.1
 DB_PORT=5432
-DB_DATABASE=onecall
-DB_USERNAME=onecall
+DB_DATABASE=1call
+DB_USERNAME=1call
 DB_PASSWORD=11221122
 
 ARI_HOST=localhost:8088
-ARI_USER=onecall
+ARI_USER=1call
 ARI_PASSWORD=11221122
-ARI_APP=onecall
+ARI_APP=1call
 ```
 
 ### 6.4. Ma'lumotlar bazasini migratsiya qilish
@@ -592,12 +590,12 @@ sudo chmod -R 775 /var/www/1call/bootstrap/cache
 ARI listener fon rejimida ishlashi kerak. Systemd service yarating:
 
 ```bash
-sudo nano /etc/systemd/system/onecall-ari.service
+sudo nano /etc/systemd/system/1call-ari.service
 ```
 
 ```ini
 [Unit]
-Description=OneCall ARI Listener
+Description=1Call ARI Listener
 After=network.target asterisk.service
 
 [Service]
@@ -614,9 +612,9 @@ WantedBy=multi-user.target
 
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl start onecall-ari
-sudo systemctl enable onecall-ari
-sudo systemctl status onecall-ari
+sudo systemctl start 1call-ari
+sudo systemctl enable 1call-ari
+sudo systemctl status 1call-ari
 ```
 
 ### 6.10. Barcha xizmatlarni tekshirish
@@ -637,7 +635,7 @@ sudo systemctl status php8.3-fpm
 sudo systemctl status asterisk
 
 # ARI Listener
-sudo systemctl status onecall-ari
+sudo systemctl status 1call-ari
 ```
 
 ### 6.11. Brauzerda tekshirish
@@ -645,7 +643,7 @@ sudo systemctl status onecall-ari
 Brauzerda `https://yourdomain.uz` ni oching.
 
 **Admin kirish:**
-- Email: `admin@onecall.com`
+- Email: `admin@1call.com`
 - Parol: `password`
 
 ---
@@ -660,7 +658,7 @@ tail -f /var/www/1call/storage/logs/laravel.log
 sudo asterisk -rvvv
 
 # ARI orqali endpointlarni tekshirish
-curl -s -u onecall:11221122 http://localhost:8088/ari/endpoints | python3 -m json.tool
+curl -s -u 1call:11221122 http://localhost:8088/ari/endpoints | python3 -m json.tool
 
 # PJSIP endpointlarni ko'rish
 sudo asterisk -rx "pjsip show endpoints"
@@ -685,9 +683,9 @@ php artisan view:clear
 | Muammo | Yechim |
 |--------|--------|
 | Nginx 502 Bad Gateway | `sudo systemctl restart php8.3-fpm` |
-| ODBC ulanish xatosi | `isql -v asterisk onecall 11221122` bilan tekshiring |
+| ODBC ulanish xatosi | `isql -v asterisk 1call 11221122` bilan tekshiring |
 | Asterisk PJSIP yuklanmaydi | `sudo asterisk -rx "module show like pjsip"` bilan tekshiring |
 | Migratsiya xatosi | `php artisan migrate:status` bilan holatni ko'ring |
-| ARI ulanish xatosi | `curl -u onecall:11221122 http://localhost:8088/ari/asterisk/info` |
+| ARI ulanish xatosi | `curl -u 1call:11221122 http://localhost:8088/ari/asterisk/info` |
 | Permission denied xatosi | `sudo chown -R www-data:www-data /var/www/1call` |
 | ps_contacts jadval yo'q | `php artisan migrate --force` qayta ishga tushiring |

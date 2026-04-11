@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -13,12 +12,6 @@ class PsTransportSeeder extends Seeder
      */
     public function run(): void
     {
-
-
-//        transport-udp,,0.0.0.0:5060,,,,,,,,,,,,udp,,,,,,no,,,,,,
-//transport-tcp,,0.0.0.0:5060,,,,,,,,,,,,tcp,,,,,,no,,,,,,
-//transport-wss,,0.0.0.0,,,,,,,,,,,,wss,,,,,,no,,,,,,
-
         $ps_transports = [
             [
                 'id' => 'transport-udp',
@@ -32,7 +25,6 @@ class PsTransportSeeder extends Seeder
                 'protocol' => 'tcp',
                 'allow_reload' => 'no'
             ],
-
             [
                 'id' => 'transport-wss',
                 'bind' => '0.0.0.0',
@@ -41,7 +33,11 @@ class PsTransportSeeder extends Seeder
             ]
         ];
 
-        DB::table('ps_transports')->insert($ps_transports);
-
+        foreach ($ps_transports as $transport) {
+            DB::table('ps_transports')->updateOrInsert(
+                ['id' => $transport['id']],
+                $transport
+            );
+        }
     }
 }

@@ -2,44 +2,47 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use App\Models\Group;
-use App\Models\Operator;
-use App\Models\SipNumber;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
+    /**
+     * Seed the application's database.
+     */
     public function run(): void
     {
-        $this->call([
-            PsTransportSeeder::class,
-        ]);
+        // 1. Rollarni yaratish
+        $this->call(RoleSeeder::class);
 
+        // 2. Asterisk Transport Seeder
+        $this->call(PsTransportSeeder::class);
 
-        $group = Group::create(['name' => 'Support']);
+        // 3. Admin foydalanuvchisini yaratish
+        $admin = User::updateOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'name' => 'Admin User',
+                'password' => Hash::make('password'),
+            ]
+        );
+        $admin->assignRole('admin');
 
-        Operator::create([
-            'name' => 'Op 101',
-            'extension' => '101',
-            'group_id' => $group->id,
-            'password' => 1234,
-        ]);
-        Operator::create([
-            'name' => 'Op 102',
-            'extension' => '102',
-            'group_id' => $group->id,
-            'password' => 1234,
-        ]);
+        // 4. Test Guruhini yaratish
+        $group = Group::updateOrCreate(['name' => 'Default Group']);
 
-        SipNumber::create(['number' => '1000', 'group_id' => $group->id]);
-
-        \App\Models\User::factory()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@onecall.com',
-            'password' => bcrypt('password'),
-        ]);
-
-
+        // 5. Test Operatorini yaratish
+        $operator = User::updateOrCreate(
+            ['email' => '101@1call.uz'],
+            [
+                'name' => 'Test Operator',
+                'extension' => '101',
+                'password' => Hash::make('1234'),
+                'group_id' => $group->id,
+            ]
+        );
+        $operator->assignRole('operator');
     }
 }

@@ -35,12 +35,13 @@
         "contacts": "Contacts",
         "callLogs": "Call Logs",
         "callHistory": "Call History",
+        "chat": "Chat",
         "repository": "Repository",
         "documentation": "Documentation"
     },
     "dashboard": {
         "title": "Dashboard",
-        "subtitle": "OneCall Call Center management panel",
+        "subtitle": "1Call Call Center management panel",
         "groups": "Groups",
         "operators": "Operators",
         "sipNumbers": "SIP Numbers",

@@ -35,12 +35,13 @@
         "contacts": "Kontaktlar",
         "callLogs": "Qo'ng'iroq Jurnali",
         "callHistory": "Qo'ng'iroq Tarixi",
+        "chat": "Chat",
         "repository": "Repozitoriya",
         "documentation": "Hujjatlar"
     },
     "dashboard": {
         "title": "Dashboard",
-        "subtitle": "OneCall Call Center boshqaruv paneli",
+        "subtitle": "1Call Call Center boshqaruv paneli",
         "groups": "Guruhlar",
         "operators": "Operatorlar",
         "sipNumbers": "SIP Raqamlar",

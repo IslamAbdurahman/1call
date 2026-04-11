@@ -13,7 +13,7 @@ class Group extends Model
 
     public function operators()
     {
-        return $this->hasMany(Operator::class);
+        return $this->hasMany(User::class);
     }
 
     public function sipNumbers()

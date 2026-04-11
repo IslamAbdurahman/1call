@@ -24,8 +24,8 @@ class AriListener extends Command
         parent::__construct();
         $this->callingService = $callingService;
 
-        $this->app = env('ARI_APP', 'onecall');
-        $this->user = env('ARI_USER', 'onecall');
+        $this->app = env('ARI_APP', '1call');
+        $this->user = env('ARI_USER', '1call');
         $this->password = env('ARI_PASSWORD', '11221122');
         // host for websocket should not have protocol, e.g. localhost:8088
         $this->host = env('ARI_HOST', 'localhost:8088');

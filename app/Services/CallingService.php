@@ -19,8 +19,8 @@ class CallingService
     public function __construct()
     {
         $this->url = env('ARI_HOST', 'localhost:8088');
-        $this->app = env('ARI_APP', 'onecall');
-        $this->user = env('ARI_USER', 'onecall');
+        $this->app = env('ARI_APP', '1call');
+        $this->user = env('ARI_USER', '1call');
         $this->password = env('ARI_PASSWORD', '11221122');
 
         $this->url = rtrim($this->url, '/');
