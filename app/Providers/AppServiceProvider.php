@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\User;
+use App\Observers\UserObserver;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-    //
+        //
     }
 
     /**
@@ -25,7 +27,8 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
 
-        \App\Models\User::observe(\App\Observers\UserObserver::class);
+        User::observe(UserObserver::class);
+        \App\Models\Trunk::observe(\App\Observers\TrunkObserver::class);
     }
 
     /**
@@ -33,19 +36,19 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function configureDefaults(): void
     {
-        Date::use (CarbonImmutable::class);
+        Date::use(CarbonImmutable::class);
 
         DB::prohibitDestructiveCommands(
             app()->isProduction(),
         );
 
-        Password::defaults(fn(): ?Password => app()->isProduction()
-        ?Password::min(12)
-        ->mixedCase()
-        ->letters()
-        ->numbers()
-        ->symbols()
-        ->uncompromised()
+        Password::defaults(fn (): ?Password => app()->isProduction()
+        ? Password::min(12)
+            ->mixedCase()
+            ->letters()
+            ->numbers()
+            ->symbols()
+            ->uncompromised()
         : null
         );
     }

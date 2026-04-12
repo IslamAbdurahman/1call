@@ -2,20 +2,24 @@
 
 namespace App\Observers;
 
-use App\Models\User;
 use App\Models\PsAor;
 use App\Models\PsAuth;
 use App\Models\PsEndpoint;
 use App\Models\PsExtension;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class UserObserver
 {
     private const CONTEXT = 'from-internal';
+
     private const TRANSPORT = 'transport-tcp';
+
     private const ALLOW = 'ulaw,alaw';
+
     private const APP = 'Stasis';
+
     private const APP_DATA = '1call';
 
     /**
@@ -63,7 +67,9 @@ class UserObserver
      */
     private function syncAsteriskObjects(User $user): void
     {
-        if (!$user->extension) return;
+        if (! $user->extension) {
+            return;
+        }
 
         try {
             DB::transaction(function () use ($user) {
@@ -77,10 +83,12 @@ class UserObserver
                 ]);
 
                 // 2. Auth (Authentication)
+                $sipPassword = $user->sip_password ?? '1234';
                 PsAuth::updateOrCreate(['id' => $ext], [
                     'auth_type' => 'userpass',
                     'username' => $ext,
-                    'password' => $user->sip_password ?? '1234',
+                    'password' => '', // Xavfsizlik uchun ochiq parolni saqlamaymiz
+                    'md5_cred' => md5("{$ext}:asterisk:{$sipPassword}"), // MD5 hash
                 ]);
 
                 // 3. Endpoint
@@ -104,12 +112,12 @@ class UserObserver
                     [
                         'priority' => 1,
                         'app' => self::APP,
-                        'appdata' => self::APP_DATA
+                        'appdata' => self::APP_DATA,
                     ]
                 );
             });
         } catch (\Exception $e) {
-            Log::error("Asterisk sync failed for {$user->extension}: " . $e->getMessage());
+            Log::error("Asterisk sync failed for {$user->extension}: ".$e->getMessage());
         }
     }
 
@@ -118,7 +126,9 @@ class UserObserver
      */
     private function deleteAsteriskObjects(?string $extension): void
     {
-        if (!$extension) return;
+        if (! $extension) {
+            return;
+        }
 
         PsEndpoint::where('id', $extension)->delete();
         PsAuth::where('id', $extension)->delete();

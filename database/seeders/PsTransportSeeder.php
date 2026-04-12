@@ -17,20 +17,20 @@ class PsTransportSeeder extends Seeder
                 'id' => 'transport-udp',
                 'bind' => '0.0.0.0:5060',
                 'protocol' => 'udp',
-                'allow_reload' => 'no'
+                'allow_reload' => 'no',
             ],
             [
                 'id' => 'transport-tcp',
                 'bind' => '0.0.0.0:5060',
                 'protocol' => 'tcp',
-                'allow_reload' => 'no'
+                'allow_reload' => 'no',
             ],
             [
                 'id' => 'transport-wss',
                 'bind' => '0.0.0.0',
                 'protocol' => 'wss',
-                'allow_reload' => 'no'
-            ]
+                'allow_reload' => 'no',
+            ],
         ];
 
         foreach ($ps_transports as $transport) {

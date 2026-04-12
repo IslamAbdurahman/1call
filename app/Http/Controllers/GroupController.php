@@ -11,7 +11,7 @@ class GroupController extends Controller
     public function index()
     {
         return Inertia::render('groups/index', [
-            'groups' => Group::withCount(['operators', 'sipNumbers'])->get()
+            'groups' => Group::withCount(['operators', 'sipNumbers'])->get(),
         ]);
     }
 
@@ -19,6 +19,7 @@ class GroupController extends Controller
     {
         $validated = $request->validate(['name' => 'required|string|max:255']);
         Group::create($validated);
+
         return redirect()->back();
     }
 
@@ -26,12 +27,14 @@ class GroupController extends Controller
     {
         $validated = $request->validate(['name' => 'required|string|max:255']);
         $group->update($validated);
+
         return redirect()->back();
     }
 
     public function destroy(Group $group)
     {
         $group->delete();
+
         return redirect()->back();
     }
 }

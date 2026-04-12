@@ -13,7 +13,7 @@ class ContactController extends Controller
     {
         return Inertia::render('contacts/index', [
             'contacts' => Contact::with('group')->paginate(10),
-            'groups' => Group::all()
+            'groups' => Group::all(),
         ]);
     }
 
@@ -22,9 +22,10 @@ class ContactController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
-            'group_id' => 'nullable|exists:groups,id'
+            'group_id' => 'nullable|exists:groups,id',
         ]);
         Contact::create($validated);
+
         return redirect()->back();
     }
 
@@ -33,15 +34,17 @@ class ContactController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
-            'group_id' => 'nullable|exists:groups,id'
+            'group_id' => 'nullable|exists:groups,id',
         ]);
         $contact->update($validated);
+
         return redirect()->back();
     }
 
     public function destroy(Contact $contact)
     {
         $contact->delete();
+
         return redirect()->back();
     }
 }

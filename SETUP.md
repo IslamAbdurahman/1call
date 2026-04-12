@@ -14,6 +14,7 @@
 - [4. ODBC o'rnatish](#4-odbc-ornatish)
 - [5. PHP 8.3 o'rnatish](#5-php-83-ornatish)
 - [6. Proyektni ishga tushirish](#6-proyektni-ishga-tushirish)
+- [7. Mahalliy (Development) rejimda ishga tushirish](#7-mahalliy-development-rejimda-ishga-tushirish)
 
 ---
 
@@ -585,36 +586,61 @@ sudo chmod -R 775 /var/www/1call/storage
 sudo chmod -R 775 /var/www/1call/bootstrap/cache
 ```
 
-### 6.9. ARI listenerni ishga tushirish
+### 6.9. Background xizmatlarni sozlash (Supervisor)
 
-ARI listener fon rejimida ishlashi kerak. Systemd service yarating:
+Proyekt to'g'ri ishlashi uchun fon rejimida 3 ta xizmat ishlashi shart: **ARI Listener**, **Queue Worker** va **Reverb**. Buning uchun **Supervisor** ishlatish tavsiya etiladi.
 
+#### 6.9.1. Supervisor o'rnatish
 ```bash
-sudo nano /etc/systemd/system/1call-ari.service
+sudo apt update
+sudo apt install -y supervisor
 ```
 
+#### 6.9.2. Konfiguratsiya yaratish
+Yangi konfiguratsiya faylini yarating:
+```bash
+sudo nano /etc/supervisor/conf.d/1call.conf
+```
+
+Quyidagi mazmunni kiriting:
 ```ini
-[Unit]
-Description=1Call ARI Listener
-After=network.target asterisk.service
+[program:1call-ari]
+process_name=%(program_name)s
+command=php /var/www/1call/artisan ari:listen
+autostart=true
+autorestart=true
+user=www-data
+redirect_stderr=true
+stdout_logfile=/var/www/1call/storage/logs/ari.log
+stopwaitsecs=3600
 
-[Service]
-User=www-data
-Group=www-data
-WorkingDirectory=/var/www/1call
-ExecStart=/usr/bin/php artisan ari:listen
-Restart=always
-RestartSec=5
+[program:1call-worker]
+process_name=%(program_name)s_%(process_num)02d
+command=php /var/www/1call/artisan queue:work --tries=3
+autostart=true
+autorestart=true
+user=www-data
+numprocs=2
+redirect_stderr=true
+stdout_logfile=/var/www/1call/storage/logs/worker.log
+stopwaitsecs=3600
 
-[Install]
-WantedBy=multi-user.target
+[program:1call-reverb]
+process_name=%(program_name)s
+command=php /var/www/1call/artisan reverb:start
+autostart=true
+autorestart=true
+user=www-data
+redirect_stderr=true
+stdout_logfile=/var/www/1call/storage/logs/reverb.log
+stopwaitsecs=3600
 ```
 
+#### 6.9.3. Xizmatlarni ishga tushirish
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl start 1call-ari
-sudo systemctl enable 1call-ari
-sudo systemctl status 1call-ari
+sudo supervisorctl reread
+sudo supervisorctl update
+sudo supervisorctl start all
 ```
 
 ### 6.10. Barcha xizmatlarni tekshirish
@@ -622,20 +648,11 @@ sudo systemctl status 1call-ari
 Barcha xizmatlar ishlayotganini tekshiring:
 
 ```bash
-# Nginx
-sudo systemctl status nginx
+# Tizim xizmatlari
+sudo systemctl status nginx postgresql php8.3-fpm asterisk
 
-# PostgreSQL
-sudo systemctl status postgresql
-
-# PHP-FPM
-sudo systemctl status php8.3-fpm
-
-# Asterisk
-sudo systemctl status asterisk
-
-# ARI Listener
-sudo systemctl status 1call-ari
+# Supervisor orqali ishlayotgan xizmatlar
+sudo supervisorctl status
 ```
 
 ### 6.11. Brauzerda tekshirish
@@ -645,6 +662,37 @@ Brauzerda `https://yourdomain.uz` ni oching.
 **Admin kirish:**
 - Email: `admin@1call.com`
 - Parol: `password`
+
+---
+
+## 7. Mahalliy (Development) rejimda ishga tushirish
+
+Mahalliy kompyuterda yoki serverda test qilish uchun quyidagi buyruqlarni turli terminallarda ishga tushiring:
+
+### 7.1. PHP Serverni ishga tushirish
+```bash
+php artisan serve
+```
+
+### 7.2. Frontend (Vite) ni ishga tushirish
+```bash
+npm run dev
+```
+
+### 7.3. ARI Listener (Asterisk bog'lanish)
+```bash
+php artisan ari:listen
+```
+
+### 7.4. Queue Worker (Navbatlar)
+```bash
+php artisan queue:work
+```
+
+### 7.5. Reverb (WebSockets)
+```bash
+php artisan reverb:start
+```
 
 ---
 

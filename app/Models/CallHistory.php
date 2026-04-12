@@ -39,6 +39,7 @@ class CallHistory extends Model
         $seconds = $this->duration;
         $minutes = intdiv($seconds, 60);
         $secs = $seconds % 60;
+
         return sprintf('%02d:%02d', $minutes, $secs);
     }
 

@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('sip_password')->nullable()->after('password');
+        Schema::table('messages', function (Blueprint $table) {
+            $table->foreignId('receiver_id')->nullable()->constrained('users')->cascadeOnDelete()->after('user_id');
         });
     }
 
@@ -21,8 +21,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('sip_password');
+        Schema::table('messages', function (Blueprint $table) {
+            $table->dropForeign(['receiver_id']);
+            $table->dropColumn('receiver_id');
         });
     }
 };

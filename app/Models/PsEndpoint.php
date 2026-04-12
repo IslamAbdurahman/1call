@@ -10,8 +10,11 @@ class PsEndpoint extends Model
     use HasFactory;
 
     protected $table = 'ps_endpoints';
+
     protected $keyType = 'string';
+
     public $incrementing = false;
+
     public $timestamps = false; // Asterisk tables usually don't have timestamps unless customized
 
     protected $guarded = [];

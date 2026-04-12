@@ -10,8 +10,11 @@ class PsAor extends Model
     use HasFactory;
 
     protected $table = 'ps_aors';
+
     protected $keyType = 'string';
+
     public $incrementing = false;
+
     public $timestamps = false;
 
     protected $guarded = [];

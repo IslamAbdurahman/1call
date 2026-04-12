@@ -26,7 +26,7 @@ class CallHistoryController extends Controller
                     ->orWhere('external_number', 'ilike', "%{$search}%")
                     ->orWhere('call_id', 'ilike', "%{$search}%");
 
-                if (!empty($contactPhones)) {
+                if (! empty($contactPhones)) {
                     $q->orWhereIn('external_number', $contactPhones);
                 }
             });
@@ -68,6 +68,7 @@ class CallHistoryController extends Controller
         // Support absolute paths stored in the DB
         if (file_exists($path)) {
             $mime = mime_content_type($path) ?: 'audio/mpeg';
+
             return response()->stream(function () use ($path) {
                 readfile($path);
             }, 200, [
@@ -79,7 +80,7 @@ class CallHistoryController extends Controller
         }
 
         // Fallback: try Laravel storage disk
-        abort_if(!Storage::exists($path), 404, 'Recording file not found.');
+        abort_if(! Storage::exists($path), 404, 'Recording file not found.');
 
         return Storage::download($path, basename($path), [
             'Content-Type' => 'audio/mpeg',

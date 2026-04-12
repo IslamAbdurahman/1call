@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use App\Models\Group;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -21,28 +21,31 @@ class DatabaseSeeder extends Seeder
         $this->call(PsTransportSeeder::class);
 
         // 3. Admin foydalanuvchisini yaratish
-        $admin = User::updateOrCreate(
-            ['email' => 'admin@example.com'],
-            [
-                'name' => 'Admin User',
-                'password' => Hash::make('password'),
-            ]
-        );
+        $admin = User::query()
+            ->updateOrCreate(
+                ['email' => 'admin@1call.com'],
+                [
+                    'name' => 'Admin User',
+                    'password' => Hash::make('password'),
+                ]
+            );
         $admin->assignRole('admin');
 
         // 4. Test Guruhini yaratish
-        $group = Group::updateOrCreate(['name' => 'Default Group']);
+        $group = Group::query()
+            ->updateOrCreate(['name' => 'Default Group']);
 
         // 5. Test Operatorini yaratish
-        $operator = User::updateOrCreate(
-            ['email' => '101@1call.uz'],
-            [
-                'name' => 'Test Operator',
-                'extension' => '101',
-                'password' => Hash::make('1234'),
-                'group_id' => $group->id,
-            ]
-        );
+        $operator = User::query()
+            ->updateOrCreate(
+                ['extension' => '101'],
+                [
+                    'name' => 'Test Operator',
+                    'email' => null,
+                    'password' => Hash::make('1234'),
+                    'group_id' => $group->id,
+                ]
+            );
         $operator->assignRole('operator');
     }
 }

@@ -40,14 +40,14 @@ export default function Login({
                     <>
                         <div className="grid gap-6">
                             <div className="grid gap-2">
-                                <Label htmlFor="email">{t('auth.email')}</Label>
+                                <Label htmlFor="email">{t('auth.emailOrExtension')}</Label>
                                 <Input
                                     id="email"
-                                    type="email"
+                                    type="text"
                                     name="email"
                                     autoComplete="email"
                                     autoFocus
-                                    placeholder={t('auth.emailPlaceholder')}
+                                    placeholder={t('auth.emailOrExtPlaceholder')}
                                 />
                                 <InputError message={errors.email} />
                             </div>

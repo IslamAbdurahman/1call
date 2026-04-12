@@ -29,8 +29,9 @@ return new class extends Migration {
      */
     private function addCheck(string $table, string $col, array $values): void
     {
-        if (!$this->isPostgres())
+        if (!$this->isPostgres()) {
             return;
+        }
 
         $vals = implode(', ', array_map(fn($v) => "'{$v}'::character varying", $values));
         $qcol = "\"{$col}\"";

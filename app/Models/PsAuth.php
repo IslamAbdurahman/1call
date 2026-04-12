@@ -10,8 +10,11 @@ class PsAuth extends Model
     use HasFactory;
 
     protected $table = 'ps_auths';
+
     protected $keyType = 'string';
+
     public $incrementing = false;
+
     public $timestamps = false;
 
     protected $guarded = [];

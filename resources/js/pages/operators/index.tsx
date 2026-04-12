@@ -1,7 +1,7 @@
 import { Head, useForm, router } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import AppLayout from '@/layouts/app-layout';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Pencil, Trash2, Plus, Search, Headset, X, Wifi, WifiOff } from 'lucide-react';
 
 interface Operator {
@@ -18,7 +18,7 @@ interface Group {
     name: string;
 }
 
-export default function OperatorsIndex({ operators, groups, onlineExtensions = [] }: { operators: Operator[]; groups: Group[]; onlineExtensions: string[] }) {
+export default function OperatorsIndex({ operators, groups, onlineExtensions = [], busyExtensions = [] }: { operators: Operator[]; groups: Group[]; onlineExtensions: string[], busyExtensions: string[] }) {
     const { t } = useTranslation();
     const { data, setData, post, processing, reset, errors } = useForm({
         name: '', extension: '', password: '', group_id: '',
@@ -29,21 +29,37 @@ export default function OperatorsIndex({ operators, groups, onlineExtensions = [
     const [groupFilter, setGroupFilter] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
 
+    useEffect(() => {
+        const channel = window.Echo.channel('calls')
+            .listen('.CallStateChanged', (e: any) => {
+                router.reload({ only: ['busyExtensions', 'onlineExtensions'], preserveState: true, preserveScroll: true });
+            });
+
+        return () => {
+            window.Echo.leave('calls');
+        };
+    }, []);
+
     const isOnline = (extension: string) => onlineExtensions.includes(extension);
+    const isBusy = (extension: string) => busyExtensions.includes(extension);
 
     const filtered = operators.filter(op => {
         const matchSearch = !search ||
             op.name.toLowerCase().includes(search.toLowerCase()) ||
             op.extension.includes(search);
         const matchGroup = !groupFilter || op.group_id?.toString() === groupFilter;
-        const matchStatus = !statusFilter ||
-            (statusFilter === 'online' && isOnline(op.extension)) ||
-            (statusFilter === 'offline' && !isOnline(op.extension));
+        
+        let matchStatus = true;
+        if (statusFilter === 'online') matchStatus = isOnline(op.extension) && !isBusy(op.extension);
+        else if (statusFilter === 'offline') matchStatus = !isOnline(op.extension);
+        else if (statusFilter === 'busy') matchStatus = isBusy(op.extension);
+
         return matchSearch && matchGroup && matchStatus;
     });
 
-    const onlineCount = operators.filter(op => isOnline(op.extension)).length;
-    const offlineCount = operators.length - onlineCount;
+    const busyCount = operators.filter(op => isBusy(op.extension)).length;
+    const onlineCount = operators.filter(op => isOnline(op.extension) && !isBusy(op.extension)).length;
+    const offlineCount = operators.length - onlineCount - busyCount;
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -85,14 +101,21 @@ export default function OperatorsIndex({ operators, groups, onlineExtensions = [
                         <div className="flex items-center gap-3 mt-1">
                             <p className="text-sm text-gray-500">{t('operators.total', { count: operators.length })}</p>
                             <span className="text-gray-300 dark:text-gray-600">|</span>
-                            <div className="flex items-center gap-1.5">
+                            <div className="flex items-center gap-1.5" title={t('operators.online')}>
                                 <span className="relative flex h-2 w-2">
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                                     <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                                 </span>
                                 <span className="text-sm text-green-600 dark:text-green-400 font-medium">{onlineCount}</span>
                             </div>
-                            <div className="flex items-center gap-1.5">
+                            <div className="flex items-center gap-1.5" title={t('operators.busy')}>
+                                <span className="relative flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+                                </span>
+                                <span className="text-sm text-orange-600 dark:text-orange-400 font-medium">{busyCount}</span>
+                            </div>
+                            <div className="flex items-center gap-1.5" title={t('operators.offline')}>
                                 <span className="inline-flex rounded-full h-2 w-2 bg-gray-300 dark:bg-gray-600"></span>
                                 <span className="text-sm text-gray-400 font-medium">{offlineCount}</span>
                             </div>
@@ -130,6 +153,7 @@ export default function OperatorsIndex({ operators, groups, onlineExtensions = [
                     >
                         <option value="">{t('operators.allStatuses')}</option>
                         <option value="online">{t('operators.online')}</option>
+                        <option value="busy">{t('operators.busy')}</option>
                         <option value="offline">{t('operators.offline')}</option>
                     </select>
                     {(search || groupFilter || statusFilter) && (
@@ -191,7 +215,15 @@ export default function OperatorsIndex({ operators, groups, onlineExtensions = [
                                                 ) : <span className="text-gray-400 text-xs">—</span>}
                                             </td>
                                             <td className="px-4 py-3 text-center">
-                                                {online ? (
+                                                {isBusy(op.extension) ? (
+                                                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-orange-50 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 border border-orange-200 dark:border-orange-800">
+                                                        <span className="relative flex h-1.5 w-1.5">
+                                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                                                            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-orange-500"></span>
+                                                        </span>
+                                                        {t('operators.busy')}
+                                                    </span>
+                                                ) : online ? (
                                                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800">
                                                         <span className="relative flex h-1.5 w-1.5">
                                                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>

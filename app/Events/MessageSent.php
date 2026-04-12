@@ -34,20 +34,29 @@ class MessageSent implements ShouldBroadcast
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
+     * @return array<int, Channel>
      */
     public function broadcastOn(): array
     {
+        if ($this->message->receiver_id) {
+            return [
+                new PrivateChannel('chat.' . $this->message->receiver_id),
+                new PrivateChannel('chat.' . $this->message->user_id),
+            ];
+        }
+
         return [
             new PresenceChannel('chat'),
         ];
     }
 
     /**
-     * The event's broadcast name.
+     * The data to broadcast.
      */
     public function broadcastWith(): array
     {
+        $this->message->loadMissing('reads', 'user');
+
         return [
             'id' => $this->message->id,
             'content' => $this->message->content,
@@ -55,7 +64,15 @@ class MessageSent implements ShouldBroadcast
                 'id' => $this->message->user->id,
                 'name' => $this->message->user->name,
             ],
+            'receiver_id' => $this->message->receiver_id,
             'created_at' => $this->message->created_at->toISOString(),
+            'reads' => $this->message->reads->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'read_at' => $user->pivot->read_at,
+                ];
+            })->toArray(),
         ];
     }
 }
