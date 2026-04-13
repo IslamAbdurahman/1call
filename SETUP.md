@@ -634,6 +634,16 @@ user=www-data
 redirect_stderr=true
 stdout_logfile=/var/www/1call/storage/logs/reverb.log
 stopwaitsecs=3600
+
+[program:1call-scheduler]
+process_name=%(program_name)s
+command=php /var/www/1call/artisan schedule:work
+autostart=true
+autorestart=true
+user=www-data
+redirect_stderr=true
+stdout_logfile=/var/www/1call/storage/logs/scheduler.log
+stopwaitsecs=3600
 ```
 
 #### 6.9.3. Xizmatlarni ishga tushirish
@@ -692,6 +702,11 @@ php artisan queue:work
 ### 7.5. Reverb (WebSockets)
 ```bash
 php artisan reverb:start
+```
+
+### 7.6. Scheduler (Rejalashtirilgan vazifalar)
+```bash
+php artisan schedule:work
 ```
 
 ---
