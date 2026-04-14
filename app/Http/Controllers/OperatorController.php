@@ -31,11 +31,11 @@ class OperatorController extends Controller
         // Asterisk ARI orqali hozirda gaplashayotgan/band raqamlarni olish
         $busyExtensions = [];
         try {
-            $ariUrl = config('asterisk.ari_host', 'localhost:8088');
+            $ariUrl = config('services.ari.host', 'localhost:8088');
             $ariUrl = rtrim(str_replace(['http://', 'https://'], '', $ariUrl), '/');
             $ariUrl = "http://{$ariUrl}/ari/channels";
-            $ariUser = config('asterisk.ari_user', '1call');
-            $ariPass = config('asterisk.ari_password', '11221122');
+            $ariUser = config('services.ari.user', '1call');
+            $ariPass = config('services.ari.password', '11221122');
 
             $response = \Illuminate\Support\Facades\Http::withBasicAuth($ariUser, $ariPass)->get($ariUrl);
 

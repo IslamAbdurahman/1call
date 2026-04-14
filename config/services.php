@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    'ari' => [
+        'host' => env('ARI_HOST', 'localhost:8088'),
+        'user' => env('ARI_USER', '1call'),
+        'password' => env('ARI_PASSWORD', '11221122'),
+        'app' => env('ARI_APP', '1call'),
+    ],
+
 ];
