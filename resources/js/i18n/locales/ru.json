@@ -45,7 +45,7 @@
         "total": "Всего: {{count}} внешних номеров",
         "addTrunk": "Добавить внешний номер",
         "searchPlaceholder": "Поиск по имени...",
-        "name": "Имя",
+        "name": "Название",
         "host": "Хост/IP",
         "port": "Порт",
         "username": "Имя пользователя",
@@ -133,10 +133,7 @@
         "readBy": "Кто прочитал",
         "allOperatorsGroup": "Группа всех операторов"
     },
-    "auth": {
-        "email": "Email",
-        "password": "Пароль"
-    },
+    "contacts": {
         "title": "Контакты",
         "total": "Всего: {{count}} контактов",
         "addContact": "Добавить контакт",
