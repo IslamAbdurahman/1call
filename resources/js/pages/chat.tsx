@@ -381,7 +381,7 @@ export default function Chat({ operators, generalUnreadCount }: ChatProps) {
                                         </span>
                                     )}
                                 </span>
-                                <p className="text-xs text-muted-foreground truncate">Barcha operatorlar guruhi</p>
+                                <p className="text-xs text-muted-foreground truncate">{t('chat.allOperatorsGroup')}</p>
                             </div>
                         </button>
                         
