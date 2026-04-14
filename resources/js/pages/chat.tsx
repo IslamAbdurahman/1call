@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import { useTranslation } from 'react-i18next';
 import AppLayout from '@/layouts/app-layout';
 
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
