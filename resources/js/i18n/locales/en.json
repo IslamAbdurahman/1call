@@ -133,10 +133,7 @@
         "readBy": "Read by",
         "allOperatorsGroup": "All operators group"
     },
-    "auth": {
-        "email": "Email",
-        "password": "Password"
-    },
+    "contacts": {
         "title": "Contacts",
         "total": "Total: {{count}} contacts",
         "addContact": "Add contact",
