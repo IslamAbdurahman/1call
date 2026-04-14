@@ -200,39 +200,17 @@
         "status": "Status",
         "notFound": "No records found"
     },
+    "twoFactor": {
+        "enabled": "Enabled",
+        "disabled": "Disabled"
+    },
     "auth": {
-        "login": "Log in",
-        "loginTitle": "Log in to your account",
-        "loginDescription": "Enter your email or extension and password below to log in",
-        "email": "Email address",
-        "emailOrExtension": "Email or Extension",
-        "emailPlaceholder": "email@example.com",
-        "emailOrExtPlaceholder": "email@example.com or 101",
-        "password": "Password",
-        "passwordPlaceholder": "Password",
-        "rememberMe": "Remember me",
-        "forgotPassword": "Forgot password?",
-        "logIn": "Log in",
-        "noAccount": "Don't have an account?",
-        "signUp": "Sign up",
-        "register": "Register",
-        "registerTitle": "Create an account",
-        "registerDescription": "Enter your details below to create your account",
-        "fullName": "Full name",
-        "confirmPassword": "Confirm password",
-        "createAccount": "Create account",
-        "hasAccount": "Already have an account?",
-        "logout": "Log out",
-        "forgotPasswordTitle": "Forgot password",
-        "forgotPasswordDesc": "Enter your email to receive a password reset link",
-        "emailResetLink": "Email password reset link",
-        "orReturnTo": "Or, return to",
-        "verifyEmail": "Verify email",
-        "verifyEmailDesc": "Please verify your email address by clicking on the link we just emailed to you.",
-        "emailVerification": "Email verification",
-        "verificationSent": "A new verification link has been sent to the email address you provided during registration.",
-        "resendVerification": "Resend verification email",
-        "newVerificationSent": "A new verification link has been sent to your email address."
+        "email": "Email",
+        "password": "Password"
+    },
+    "trunks": {
+        "udp": "UDP",
+        "tcp": "TCP"
     },
     "settings": {
         "title": "Settings",

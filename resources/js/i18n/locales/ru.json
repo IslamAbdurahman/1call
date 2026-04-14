@@ -200,39 +200,17 @@
         "status": "Статус",
         "notFound": "Записей не найдено"
     },
+    "twoFactor": {
+        "enabled": "Включено",
+        "disabled": "Отключено"
+    },
     "auth": {
-        "login": "Вход",
-        "loginTitle": "Войдите в свой аккаунт",
-        "loginDescription": "Введите email или extension и пароль для входа",
-        "email": "Email адрес",
-        "emailOrExtension": "Email или Extension",
-        "emailPlaceholder": "email@example.com",
-        "emailOrExtPlaceholder": "email@example.com или 101",
-        "password": "Пароль",
-        "passwordPlaceholder": "Пароль",
-        "rememberMe": "Запомнить меня",
-        "forgotPassword": "Забыли пароль?",
-        "logIn": "Войти",
-        "noAccount": "Нет аккаунта?",
-        "signUp": "Зарегистрируйтесь",
-        "register": "Регистрация",
-        "registerTitle": "Создать аккаунт",
-        "registerDescription": "Введите данные для создания аккаунта",
-        "fullName": "Полное имя",
-        "confirmPassword": "Подтвердите пароль",
-        "createAccount": "Создать аккаунт",
-        "hasAccount": "Уже есть аккаунт?",
-        "logout": "Выйти",
-        "forgotPasswordTitle": "Забыли пароль",
-        "forgotPasswordDesc": "Введите email для получения ссылки сброса пароля",
-        "emailResetLink": "Отправить ссылку сброса",
-        "orReturnTo": "Или вернуться к",
-        "verifyEmail": "Подтвердите email",
-        "verifyEmailDesc": "Пожалуйста, подтвердите свой email, перейдя по ссылке, которую мы вам отправили.",
-        "emailVerification": "Подтверждение email",
-        "verificationSent": "Новая ссылка для подтверждения отправлена на email, указанный при регистрации.",
-        "resendVerification": "Отправить повторно",
-        "newVerificationSent": "Новая ссылка подтверждения отправлена на ваш email."
+        "email": "Email",
+        "password": "Пароль"
+    },
+    "trunks": {
+        "udp": "UDP",
+        "tcp": "TCP"
     },
     "settings": {
         "title": "Настройки",

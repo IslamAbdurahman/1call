@@ -85,7 +85,7 @@ export default function TwoFactor({
                         </div>
                     ) : (
                         <div className="flex flex-col items-start justify-start space-y-4">
-                            <Badge variant="destructive">Disabled</Badge>
+                            <Badge variant="destructive">{t('twoFactor.disabled')}</Badge>
                             <p className="text-muted-foreground">
                                 When you enable two-factor authentication, you
                                 will be prompted for a secure pin during login.

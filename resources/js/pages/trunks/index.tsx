@@ -209,8 +209,8 @@ export default function TrunksIndex({ trunks }: { trunks: Trunk[] }) {
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('trunks.transport')}</label>
                                 <select value={data.transport} onChange={e => setData('transport', e.target.value)} className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none">
-                                    <option value="transport-udp">UDP</option>
-                                    <option value="transport-tcp">TCP</option>
+                                    <option value="transport-udp">{t('trunks.udp')}</option>
+                                    <option value="transport-tcp">{t('trunks.tcp')}</option>
                                 </select>
                             </div>
                             <div>

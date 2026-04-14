@@ -207,39 +207,17 @@
         "status": "Status",
         "notFound": "Yozuv topilmadi"
     },
+    "twoFactor": {
+        "enabled": "Yoqilgan",
+        "disabled": "O'chirilgan"
+    },
     "auth": {
-        "login": "Kirish",
-        "loginTitle": "Hisobingizga kiring",
-        "loginDescription": "Email yoxud Extension va parolingizni kiriting",
-        "email": "Email manzil",
-        "emailOrExtension": "Email yoki Extension",
-        "emailPlaceholder": "email@example.com",
-        "emailOrExtPlaceholder": "email@example.com yoki 101",
-        "password": "Parol",
-        "passwordPlaceholder": "Parol",
-        "rememberMe": "Meni eslab qol",
-        "forgotPassword": "Parolni unutdingizmi?",
-        "logIn": "Kirish",
-        "noAccount": "Hisobingiz yo'qmi?",
-        "signUp": "Ro'yxatdan o'ting",
-        "register": "Ro'yxatdan o'tish",
-        "registerTitle": "Hisob yaratish",
-        "registerDescription": "Hisob yaratish uchun ma'lumotlarni kiriting",
-        "fullName": "To'liq ism",
-        "confirmPassword": "Parolni tasdiqlang",
-        "createAccount": "Hisob yaratish",
-        "hasAccount": "Hisobingiz bormi?",
-        "logout": "Chiqish",
-        "forgotPasswordTitle": "Parolni unutdingizmi",
-        "forgotPasswordDesc": "Parolni tiklash havolasini olish uchun emailingizni kiriting",
-        "emailResetLink": "Parolni tiklash havolasini yuborish",
-        "orReturnTo": "Yoki qaytish",
-        "verifyEmail": "Emailni tasdiqlash",
-        "verifyEmailDesc": "Iltimos, biz yuborgan havolaga bosib email manzilingizni tasdiqlang.",
-        "emailVerification": "Email tasdiqlash",
-        "verificationSent": "Ro'yxatdan o'tishda kiritgan email manzilingizga yangi tasdiqlash havolasi yuborildi.",
-        "resendVerification": "Tasdiqlash emailini qayta yuborish",
-        "newVerificationSent": "Yangi tasdiqlash havolasi email manzilingizga yuborildi."
+        "email": "Email",
+        "password": "Parol"
+    },
+    "trunks": {
+        "udp": "UDP",
+        "tcp": "TCP"
     },
     "settings": {
         "title": "Sozlamalar",
