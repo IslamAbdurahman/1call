@@ -140,9 +140,13 @@
         "typeMessage": "Type a message...",
         "send": "Send",
         "noMessages": "No messages yet...",
-        "noReadBy": "No one has read this yet",
+        "noReadBy": "No one has read this yet.",
         "selectChat": "Select a conversation",
-        "searchMessages": "Search messages..."
+        "searchMessages": "Search messages...",
+        "conversations": "Conversations",
+        "operatorNotFound": "No operator found",
+        "messageNotFound": "Message not found",
+        "unknownUser": "Unknown"
     },
     "contacts": {
         "title": "Contacts",

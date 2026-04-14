@@ -140,9 +140,13 @@
         "typeMessage": "Написать сообщение...",
         "send": "Отправить",
         "noMessages": "Сообщений пока нет...",
-        "noReadBy": "Никто ещё не прочитал",
+        "noReadBy": "Никто ещё не прочитал.",
         "selectChat": "Выберите беседу",
-        "searchMessages": "Поиск сообщений..."
+        "searchMessages": "Поиск сообщений...",
+        "conversations": "Беседы",
+        "operatorNotFound": "Оператор не найден",
+        "messageNotFound": "Сообщение не найдено",
+        "unknownUser": "Неизвестный"
     },
     "contacts": {
         "title": "Контакты",

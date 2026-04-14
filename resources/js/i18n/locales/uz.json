@@ -140,9 +140,13 @@
         "typeMessage": "Xabar yozing...",
         "send": "Yuborish",
         "noMessages": "Hozircha xabarlar yo'q...",
-        "noReadBy": "Hali hech kim o'qimagan",
+        "noReadBy": "Hali hech kim o'qimagan.",
         "selectChat": "Suhbatni tanlang",
-        "searchMessages": "Xabarlarni qidirish..."
+        "searchMessages": "Xabarlarni qidirish...",
+        "conversations": "Suhbatlar",
+        "operatorNotFound": "Operator topilmadi",
+        "messageNotFound": "Xabar topilmadi",
+        "unknownUser": "Noma'lum"
     },
     "contacts": {
         "title": "Kontaktlar",

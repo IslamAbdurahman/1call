@@ -46,11 +46,15 @@ const OperatorItem = memo(({
     operator, 
     isSelected, 
     isOnline, 
+    onlineLabel,
+    offlineLabel,
     onClick 
 }: { 
     operator: User; 
     isSelected: boolean; 
     isOnline: boolean; 
+    onlineLabel: string;
+    offlineLabel: string;
     onClick: () => void 
 }) => {
     const formatTime = (dateString: string | null | undefined) => {
@@ -83,7 +87,7 @@ const OperatorItem = memo(({
                 </div>
                 <div className="h-4 flex items-center justify-between">
                     <p className={`text-xs truncate flex-1 ${isOnline ? 'text-primary font-semibold' : 'text-muted-foreground'}`}>
-                        {isOnline ? 'onlayn' : 'oflayn'}
+                        {isOnline ? onlineLabel : offlineLabel}
                     </p>
                     {(operator.unread_count || 0) > 0 && (
                         <span className="bg-primary text-primary-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center shrink-0 ml-1">
@@ -320,11 +324,11 @@ export default function Chat({ operators, generalUnreadCount }: ChatProps) {
     }, [messages, messageSearchTerm]);
 
     const getChatTitle = () => {
-        if (isGeneralChat) return "Umumiy Chat";
+        if (isGeneralChat) return t('chat.generalChat');
         if (selectedReceiverId) {
-            return operatorsState.find(o => o.id === selectedReceiverId)?.name || "Noma'lum";
+            return operatorsState.find(o => o.id === selectedReceiverId)?.name || t('chat.unknownUser');
         }
-        return "Suhbatni tanlang";
+        return t('chat.selectChat');
     };
 
     const isOnline = (userId: number) => onlineUsers.includes(userId);
@@ -349,14 +353,14 @@ export default function Chat({ operators, generalUnreadCount }: ChatProps) {
                 {/* Sidebar */}
                 <div className={`${view === 'chat' ? 'hidden md:flex' : 'flex'} w-full md:w-80 flex-col border-r bg-muted/10 shrink-0`}>
                     <div className="p-4 border-b bg-background sticky top-0 z-10 h-16 flex items-center justify-between shadow-sm">
-                        <span className="font-bold text-lg">Suhbatlar</span>
+                        <span className="font-bold text-lg">{t('chat.conversations')}</span>
                     </div>
                     
                     <div className="p-3 bg-background/50">
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                             <Input 
-                                placeholder="Operatorlarni qidirish..." 
+                                placeholder={t('chat.searchPlaceholder')} 
                                 className="pl-9 bg-muted/50 border-0 h-10 shadow-none focus-visible:ring-1"
                                 value={userSearchTerm}
                                 onChange={(e) => setUserSearchTerm(e.target.value)}
@@ -387,7 +391,7 @@ export default function Chat({ operators, generalUnreadCount }: ChatProps) {
                         
                         {filteredOperators.length === 0 && userSearchTerm && (
                             <div className="p-8 text-center text-sm text-muted-foreground">
-                                Operator topilmadi
+                                {t('chat.operatorNotFound')}
                             </div>
                         )}
 
@@ -397,6 +401,8 @@ export default function Chat({ operators, generalUnreadCount }: ChatProps) {
                                 operator={operator}
                                 isSelected={selectedReceiverId === operator.id && !isGeneralChat}
                                 isOnline={isOnline(operator.id)}
+                                onlineLabel={t('operators.online')}
+                                offlineLabel={t('operators.offline')}
                                 onClick={() => selectChat(operator.id)}
                             />
                         ))}
@@ -407,7 +413,7 @@ export default function Chat({ operators, generalUnreadCount }: ChatProps) {
                 <div className={`${view === 'list' ? 'hidden md:flex' : 'flex'} flex-1 flex-col bg-background relative min-w-0`}>
                     {!isGeneralChat && selectedReceiverId === null && view === 'chat' ? (
                         <div className="flex-1 flex items-center justify-center text-muted-foreground">
-                            Suhbatni tanlang
+                            {t('chat.selectChat')}
                         </div>
                     ) : (
                         <>
@@ -450,7 +456,7 @@ export default function Chat({ operators, generalUnreadCount }: ChatProps) {
                                         <div className="flex-1 flex items-center gap-2">
                                             <input 
                                                 autoFocus
-                                                placeholder="Xabarlarni qidirish..." 
+                                                placeholder={t('chat.searchMessages')} 
                                                 className="w-full bg-muted/50 border-0 h-8 px-3 rounded-md focus:ring-1 focus:ring-primary outline-none text-sm"
                                                 value={messageSearchTerm}
                                                 onChange={(e) => setMessageSearchTerm(e.target.value)}
@@ -491,7 +497,7 @@ export default function Chat({ operators, generalUnreadCount }: ChatProps) {
                             >
                                 {filteredMessages.length === 0 ? (
                                     <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
-                                        {messageSearchTerm ? "Xabar topilmadi" : "Hozircha xabarlar yo'q..."}
+                                        {messageSearchTerm ? t('chat.messageNotFound') : t('chat.noMessages')}
                                     </div>
                                 ) : null}
 
@@ -547,7 +553,7 @@ export default function Chat({ operators, generalUnreadCount }: ChatProps) {
                                                             </DropdownMenuTrigger>
                                                             <DropdownMenuContent align="end">
                                                                 <DropdownMenuItem onClick={() => openReadByModal(message.reads || [])}>
-                                                                    Kimlar o'qidi
+                                                                    {t('chat.readBy')}
                                                                 </DropdownMenuItem>
                                                             </DropdownMenuContent>
                                                         </DropdownMenu>
@@ -584,7 +590,7 @@ export default function Chat({ operators, generalUnreadCount }: ChatProps) {
                     </DialogHeader>
                     <div className="space-y-3 mt-4 max-h-[60vh] overflow-y-auto pr-2">
                         {readByUsers.length === 0 ? (
-                            <p className="text-sm text-muted-foreground text-center py-6">Hali hech kim o'qimagan.</p>
+                            <p className="text-sm text-muted-foreground text-center py-6">{t('chat.noReadBy')}</p>
                         ) : (
                             readByUsers.map(user => (
                                 <div key={user.id} className="flex justify-between items-center border-b pb-3 last:border-0 last:pb-0">
