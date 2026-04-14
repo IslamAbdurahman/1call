@@ -210,6 +210,9 @@
         "enable2FA": "Включить 2FA"
     },
     "auth": {
+        "confirmPasswordTitle": "Подтверждение пароля",
+        "confirmPasswordDesc": "Это защищенная область приложения. Пожалуйста, подтвердите пароль перед продолжением.",
+        "confirmPassword": "Подтвердить пароль",
         "email": "Email",
         "password": "Пароль"
     },

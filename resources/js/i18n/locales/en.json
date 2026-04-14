@@ -210,6 +210,9 @@
         "enable2FA": "Enable 2FA"
     },
     "auth": {
+        "confirmPasswordTitle": "Confirm password",
+        "confirmPasswordDesc": "This is a secure area of the application. Please confirm your password before continuing.",
+        "confirmPassword": "Confirm password",
         "email": "Email",
         "password": "Password"
     },

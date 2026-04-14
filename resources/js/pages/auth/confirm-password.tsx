@@ -1,4 +1,5 @@
 import { Form, Head } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,12 +9,13 @@ import AuthLayout from '@/layouts/auth-layout';
 import { store } from '@/routes/password/confirm';
 
 export default function ConfirmPassword() {
+    const { t } = useTranslation();
     return (
         <AuthLayout
-            title="Confirm your password"
-            description="This is a secure area of the application. Please confirm your password before continuing."
+            title={t('auth.confirmPasswordTitle')}
+            description={t('auth.confirmPasswordDesc')}
         >
-            <Head title="Confirm password" />
+            <Head title={t('auth.confirmPassword')} />
 
             <Form {...store.form()} resetOnSuccess={['password']}>
                 {({ processing, errors }) => (
@@ -24,7 +26,8 @@ export default function ConfirmPassword() {
                                 id="password"
                                 type="password"
                                 name="password"
-                                placeholder={t('common.passwordPlaceholder')}                                autoComplete="current-password"
+                                placeholder={t('common.passwordPlaceholder')}
+                                autoComplete="current-password"
                                 autoFocus
                             />
 
@@ -38,7 +41,7 @@ export default function ConfirmPassword() {
                                 data-test="confirm-password-button"
                             >
                                 {processing && <Spinner />}
-                                Confirm password
+                                {t('auth.confirmPassword')}
                             </Button>
                         </div>
                     </div>

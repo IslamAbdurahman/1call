@@ -217,6 +217,9 @@
         "enable2FA": "2FA ni yoqish"
     },
     "auth": {
+        "confirmPasswordTitle": "Parolni tasdiqlash",
+        "confirmPasswordDesc": "Bu tizimning himoyalangan qismi. Davom etishdan oldin parolingizni tasdiqlang.",
+        "confirmPassword": "Parolni tasdiqlash",
         "email": "Email",
         "password": "Parol"
     },
