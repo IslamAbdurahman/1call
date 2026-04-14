@@ -97,6 +97,7 @@ const OperatorItem = memo(({
 OperatorItem.displayName = 'OperatorItem';
 
 export default function Chat({ operators, generalUnreadCount }: ChatProps) {
+    const { t } = useTranslation();
     const { auth } = usePage<{ auth: { user: User } }>().props;
     const [messages, setMessages] = useState<Message[]>([]);
     const [selectedReceiverId, setSelectedReceiverId] = useState<number | null>(null);
@@ -601,5 +602,8 @@ export default function Chat({ operators, generalUnreadCount }: ChatProps) {
                 </DialogContent>
             </Dialog>
         </AppLayout>
+    );
+}
+t>
     );
 }
