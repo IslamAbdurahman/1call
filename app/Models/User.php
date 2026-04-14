@@ -13,6 +13,7 @@ use Spatie\Permission\Traits\HasRoles;
 /**
  * @property int $unread_count
  * @property string|null $last_message_at
+ * @property string|null $last_seen_at
  * @property bool $has_conversation
  */
 class User extends Authenticatable
@@ -32,6 +33,7 @@ class User extends Authenticatable
         'sip_password',
         'extension',
         'group_id',
+        'last_seen_at',
     ];
 
     /**

@@ -17,6 +17,7 @@ interface User {
     unread_count?: number;
     has_conversation?: boolean;
     last_message_at?: string | null;
+    last_seen_at?: string | null;
 }
 
 interface ReadReceipt {
@@ -332,9 +333,9 @@ export default function Chat({ operators, generalUnreadCount }: ChatProps) {
         if (isOnline(userId)) return t('operators.online');
         
         const operator = operatorsState.find(op => op.id === userId);
-        if (!operator || !operator.last_message_at) return t('operators.offline');
+        if (!operator || !operator.last_seen_at) return t('operators.offline');
         
-        const date = new Date(operator.last_message_at);
+        const date = new Date(operator.last_seen_at);
         const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
         return t('operators.lastSeen', { time: timeStr });
     };

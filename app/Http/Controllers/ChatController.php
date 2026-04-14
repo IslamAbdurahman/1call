@@ -13,7 +13,10 @@ class ChatController extends Controller
 {
     public function index(Request $request)
     {
-        $userId = $request->user()->id;
+        $user = $request->user();
+        $user->update(['last_seen_at' => now()]);
+        
+        $userId = $user->id;
 
         $operators = User::where('id', '!=', $userId)->get()->map(function ($user) use ($userId) {
             // Count unread messages from this user to me
