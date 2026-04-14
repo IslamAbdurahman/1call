@@ -117,6 +117,11 @@
         "passwordPlaceholder": "Parol",
         "deleteConfirm": "Ushbu operatorn o'chirishni tasdiqlaysizmi?"
     },
+    "welcome": {
+        "title": "Xush kelibsiz",
+        "brand": "1Call",
+        "desc": "Premium Call Center Tizimi"
+    },
     "contacts": {
         "title": "Kontaktlar",
         "total": "Jami: {{count}} ta kontakt",

@@ -342,9 +342,9 @@ export default function Welcome({ canRegister = true }: { canRegister?: boolean 
                                     <div className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-emerald-400 border-2 border-white animate-pulse" />
                                 </div>
                                 <div className="flex items-center -ml-0.5">
-                                    <span className="text-2xl font-black tracking-tighter text-indigo-600 mr-0.5">1</span>
+                                    <span className="text-2xl font-black tracking-tighter text-indigo-600 mr-0.5">{t('welcome.brand').substring(0, 1)}</span>
                                     <span className="text-xl font-bold tracking-tight text-gray-900">
-                                        <span className="gradient-text">Call</span>
+                                        <span className="gradient-text">{t('welcome.brand').substring(1)}</span>
                                     </span>
                                 </div>
                             </div>
