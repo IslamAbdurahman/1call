@@ -329,14 +329,14 @@ export default function Chat({ operators, generalUnreadCount }: ChatProps) {
 
     const getLastSeenText = (userId: number | null) => {
         if (!userId) return '';
-        if (isOnline(userId)) return 'onlayn';
+        if (isOnline(userId)) return t('operators.online');
         
         const operator = operatorsState.find(op => op.id === userId);
-        if (!operator || !operator.last_message_at) return 'oflayn';
+        if (!operator || !operator.last_message_at) return t('operators.offline');
         
         const date = new Date(operator.last_message_at);
         const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-        return `oxirgi marta ${timeStr}da ko'rilgan`;
+        return t('operators.lastSeen', { time: timeStr });
     };
 
     return (

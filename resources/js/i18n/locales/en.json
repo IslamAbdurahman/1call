@@ -115,7 +115,8 @@
         "extensionHint": "Leave blank - will be automatically generated based on the group's start number.",
         "sipPassword": "SIP Password",
         "passwordPlaceholder": "Password",
-        "deleteConfirm": "Are you sure you want to delete this operator?"
+        "deleteConfirm": "Are you sure you want to delete this operator?",
+        "lastSeen": "last seen at {{time}}"
     },
     "welcome": {
         "title": "Welcome",

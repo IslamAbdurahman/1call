@@ -115,7 +115,8 @@
         "extensionHint": "Bo'sh qoldiring - guruhning boshlang'ich raqamidan kelib chiqib avtomatik yaratiladi.",
         "sipPassword": "SIP Parol",
         "passwordPlaceholder": "Parol",
-        "deleteConfirm": "Ushbu operatorn o'chirishni tasdiqlaysizmi?"
+        "deleteConfirm": "Ushbu operatorn o'chirishni tasdiqlaysizmi?",
+        "lastSeen": "oxirgi marta {{time}}da ko'rilgan"
     },
     "welcome": {
         "title": "Xush kelibsiz",
