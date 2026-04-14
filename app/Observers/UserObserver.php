@@ -67,14 +67,20 @@ class UserObserver
      */
     private function syncAsteriskObjects(User $user): void
     {
+        $appData = config('services.ari.app', '1call');
+        Log::info("Attempting Asterisk sync for User: {$user->id}, extension: {$user->extension}, app: {$appData}");
+
         if (! $user->extension) {
+            Log::warning("Sync skipped: No extension for User {$user->id}");
             return;
         }
 
         try {
-            DB::transaction(function () use ($user) {
+            DB::transaction(function () use ($user, $appData) {
                 $ext = $user->extension;
+                Log::info("Syncing Asterisk objects for extension: {$ext}");
 
+                // ... (AOR and Auth parts remain same) ...
                 // 1. AOR (Address of Record)
                 PsAor::updateOrCreate(['id' => $ext], [
                     'max_contacts' => 1,
@@ -87,8 +93,8 @@ class UserObserver
                 PsAuth::updateOrCreate(['id' => $ext], [
                     'auth_type' => 'userpass',
                     'username' => $ext,
-                    'password' => '', // Xavfsizlik uchun ochiq parolni saqlamaymiz
-                    'md5_cred' => md5("{$ext}:asterisk:{$sipPassword}"), // MD5 hash
+                    'password' => $sipPassword,
+                    'md5_cred' => md5("{$ext}:asterisk:{$sipPassword}"),
                 ]);
 
                 // 3. Endpoint
@@ -112,9 +118,11 @@ class UserObserver
                     [
                         'priority' => 1,
                         'app' => self::APP,
-                        'appdata' => self::APP_DATA,
+                        'appdata' => $appData, // Dinamik nom
                     ]
                 );
+                
+                Log::info("Successfully synced Asterisk objects for extension: {$ext}");
             });
         } catch (\Exception $e) {
             Log::error("Asterisk sync failed for {$user->extension}: ".$e->getMessage());
