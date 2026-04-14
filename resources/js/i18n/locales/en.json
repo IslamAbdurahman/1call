@@ -121,14 +121,22 @@
     "welcome": {
         "title": "Welcome",
         "brand": "1Call",
-        "desc": "Premium Call Center System"
+        "desc": "Premium Call Center System",
+        "active": "Active",
+        "online": "Online",
+        "avgWait": "Avg Wait",
+        "today": "Today"
     },
     "chat": {
         "title": "Chat",
         "generalChat": "General Chat",
-        "readBy": "Read by"
+        "readBy": "Read by",
+        "allOperatorsGroup": "All operators group"
     },
-    "contacts": {
+    "auth": {
+        "email": "Email",
+        "password": "Password"
+    },
         "title": "Contacts",
         "total": "Total: {{count}} contacts",
         "addContact": "Add contact",

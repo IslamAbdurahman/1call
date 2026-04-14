@@ -121,14 +121,22 @@
     "welcome": {
         "title": "Добро пожаловать",
         "brand": "1Call",
-        "desc": "Премиум система Call Center"
+        "desc": "Премиум система Call Center",
+        "active": "Активен",
+        "online": "Онлайн",
+        "avgWait": "Ср. ожидание",
+        "today": "Сегодня"
     },
     "chat": {
         "title": "Чат",
         "generalChat": "Общий чат",
-        "readBy": "Кто прочитал"
+        "readBy": "Кто прочитал",
+        "allOperatorsGroup": "Группа всех операторов"
     },
-    "contacts": {
+    "auth": {
+        "email": "Email",
+        "password": "Пароль"
+    },
         "title": "Контакты",
         "total": "Всего: {{count}} контактов",
         "addContact": "Добавить контакт",

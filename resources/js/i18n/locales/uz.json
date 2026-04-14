@@ -121,14 +121,22 @@
     "welcome": {
         "title": "Xush kelibsiz",
         "brand": "1Call",
-        "desc": "Premium Call Center Tizimi"
+        "desc": "Premium Call Center Tizimi",
+        "active": "Faol",
+        "online": "Onlayn",
+        "avgWait": "O'rtacha kutish",
+        "today": "Bugun"
     },
     "chat": {
         "title": "Chat",
         "generalChat": "Umumiy Chat",
-        "readBy": "Kimlar o'qidi"
+        "readBy": "Kimlar o'qidi",
+        "allOperatorsGroup": "Barcha operatorlar guruhi"
     },
-    "contacts": {
+    "auth": {
+        "email": "Email",
+        "password": "Parol"
+    },
         "title": "Kontaktlar",
         "total": "Jami: {{count}} ta kontakt",
         "addContact": "Kontakt qo'shish",

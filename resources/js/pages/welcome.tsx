@@ -501,28 +501,28 @@ export default function Welcome({ canRegister = true }: { canRegister?: boolean 
                                             <div className="rounded-xl bg-white/5 p-4 border border-white/5">
                                                 <div className="flex items-center gap-2 text-xs text-gray-400 mb-2">
                                                     <PhoneCall className="h-3.5 w-3.5" />
-                                                    <span>Active</span>
+                                                    <span>{t('welcome.active')}</span>
                                                 </div>
                                                 <div className="text-2xl font-bold text-white">12</div>
                                             </div>
                                             <div className="rounded-xl bg-white/5 p-4 border border-white/5">
                                                 <div className="flex items-center gap-2 text-xs text-gray-400 mb-2">
                                                     <Users className="h-3.5 w-3.5" />
-                                                    <span>Online</span>
+                                                    <span>{t('welcome.online')}</span>
                                                 </div>
                                                 <div className="text-2xl font-bold text-emerald-400">8</div>
                                             </div>
                                             <div className="rounded-xl bg-white/5 p-4 border border-white/5">
                                                 <div className="flex items-center gap-2 text-xs text-gray-400 mb-2">
                                                     <Clock className="h-3.5 w-3.5" />
-                                                    <span>Avg Wait</span>
+                                                    <span>{t('welcome.avgWait')}</span>
                                                 </div>
                                                 <div className="text-2xl font-bold text-yellow-400">0:23</div>
                                             </div>
                                             <div className="rounded-xl bg-white/5 p-4 border border-white/5">
                                                 <div className="flex items-center gap-2 text-xs text-gray-400 mb-2">
                                                     <CheckCircle2 className="h-3.5 w-3.5" />
-                                                    <span>Today</span>
+                                                    <span>{t('welcome.today')}</span>
                                                 </div>
                                                 <div className="text-2xl font-bold text-indigo-400">247</div>
                                             </div>
