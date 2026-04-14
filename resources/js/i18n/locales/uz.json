@@ -133,10 +133,7 @@
         "readBy": "Kimlar o'qidi",
         "allOperatorsGroup": "Barcha operatorlar guruhi"
     },
-    "auth": {
-        "email": "Email",
-        "password": "Parol"
-    },
+    "contacts": {
         "title": "Kontaktlar",
         "total": "Jami: {{count}} ta kontakt",
         "addContact": "Kontakt qo'shish",
