@@ -266,8 +266,15 @@ export default function Chat({ operators, generalUnreadCount }: ChatProps) {
                 content: newMessage,
                 receiver_id: selectedReceiverId,
             });
-            processedMessagesRef.current.add(response.data.id);
-            setMessages(prev => [...prev, response.data]);
+            
+            const savedMessage = response.data;
+            
+            // Check if already processed by WebSocket
+            if (!processedMessagesRef.current.has(savedMessage.id)) {
+                processedMessagesRef.current.add(savedMessage.id);
+                setMessages(prev => [...prev, savedMessage]);
+            }
+            
             setNewMessage('');
             
             if (selectedReceiverId) {
