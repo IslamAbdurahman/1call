@@ -102,7 +102,7 @@ export default function GroupsIndex({ groups }: { groups: Group[] }) {
                             <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
                                 {filtered.length === 0 ? (
                                     <tr>
-                                        <td colSpan={5} className="px-4 py-12 text-center">
+                                        <td colSpan={6} className="px-4 py-12 text-center">
                                             <div className="flex flex-col items-center gap-2 text-gray-400">
                                                 <Layers className="w-10 h-10 opacity-30" />
                                                 <p className="text-sm">{t('groups.notFound')}</p>
@@ -113,6 +113,13 @@ export default function GroupsIndex({ groups }: { groups: Group[] }) {
                                     <tr key={group.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/40 transition-colors">
                                         <td className="px-4 py-3 text-xs text-gray-400 font-mono">{group.id}</td>
                                         <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">{group.name}</td>
+                                        <td className="px-4 py-3">
+                                            {group.start_number ? (
+                                                <span className="font-mono text-xs bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded text-gray-600 dark:text-gray-300">
+                                                    {group.start_number}
+                                                </span>
+                                            ) : <span className="text-gray-400 text-xs">—</span>}
+                                        </td>
                                         <td className="px-4 py-3">
                                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300">
                                                 <Users className="w-3 h-3" />{group.operators_count}
@@ -163,22 +170,20 @@ export default function GroupsIndex({ groups }: { groups: Group[] }) {
                                 />
                                 {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
                             </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('groups.startNumber')}</label>
+                                <input
+                                    type="number"
+                                    value={data.start_number}
+                                    onChange={e => setData('start_number', e.target.value)}
+                                    placeholder="100"
+                                    className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none"
+                                />
+                                {errors.start_number && <p className="text-red-500 text-xs mt-1">{errors.start_number}</p>}
+                                <p className="text-[10px] text-gray-500 mt-1">{t('groups.startNumberHint')}</p>
+                            </div>
                             <div className="flex gap-2 pt-2">
                                 <button type="submit" disabled={processing} className="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white text-sm font-medium rounded-lg transition-colors">
-                                    {processing ? t('common.saving') : editingGroup ? t('common.save') : t('common.create')}
-                                </button>
-                                <button type="button" onClick={() => { setIsOpen(false); reset(); }} className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors">
-                                    {t('common.cancel')}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
-        </AppLayout>
-    );
-}
-"flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white text-sm font-medium rounded-lg transition-colors">
                                     {processing ? t('common.saving') : editingGroup ? t('common.save') : t('common.create')}
                                 </button>
                                 <button type="button" onClick={() => { setIsOpen(false); reset(); }} className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors">
