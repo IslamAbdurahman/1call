@@ -208,8 +208,13 @@
         "notFound": "Yozuv topilmadi"
     },
     "twoFactor": {
+        "title": "Ikki bosqichli autentifikatsiya",
+        "description": "Ikki bosqichli autentifikatsiya sozlamalarini boshqarish",
         "enabled": "Yoqilgan",
-        "disabled": "O'chirilgan"
+        "disabled": "O'chirilgan",
+        "disable2FA": "2FA ni o'chirish",
+        "continueSetup": "Sozlashni davom ettirish",
+        "enable2FA": "2FA ni yoqish"
     },
     "auth": {
         "email": "Email",

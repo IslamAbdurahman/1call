@@ -201,8 +201,13 @@
         "notFound": "No records found"
     },
     "twoFactor": {
+        "title": "Two-Factor Authentication",
+        "description": "Manage your two-factor authentication settings",
         "enabled": "Enabled",
-        "disabled": "Disabled"
+        "disabled": "Disabled",
+        "disable2FA": "Disable 2FA",
+        "continueSetup": "Continue Setup",
+        "enable2FA": "Enable 2FA"
     },
     "auth": {
         "email": "Email",
