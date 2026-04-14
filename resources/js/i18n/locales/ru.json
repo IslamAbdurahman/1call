@@ -91,6 +91,8 @@
         "editGroup": "Редактировать группу",
         "newGroup": "Новая группа",
         "groupName": "Название группы",
+        "startNumber": "Начальный номер",
+        "startNumberHint": "Начальный SIP-номер для операторов этой группы (например: 100).",
         "deleteConfirm": "Вы уверены, что хотите удалить эту группу?"
     },
     "operators": {
@@ -110,6 +112,7 @@
         "operatorName": "Имя оператора",
         "extensionLabel": "Внутренний номер (Ext)",
         "extensionPlaceholder": "101",
+        "extensionHint": "Оставьте пустым — будет создан автоматически на основе начального номера группы.",
         "sipPassword": "SIP Пароль",
         "passwordPlaceholder": "Пароль",
         "deleteConfirm": "Вы уверены, что хотите удалить этого оператора?"

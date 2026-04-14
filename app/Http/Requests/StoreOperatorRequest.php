@@ -23,7 +23,7 @@ class StoreOperatorRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'extension' => 'required|string|unique:users,extension',
+            'extension' => 'nullable|string|unique:users,extension',
             'password' => 'required|string|min:4',
             'group_id' => 'required|exists:groups,id',
         ];

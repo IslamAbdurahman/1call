@@ -91,6 +91,8 @@
         "editGroup": "Guruhni tahrirlash",
         "newGroup": "Yangi guruh",
         "groupName": "Guruh nomi",
+        "startNumber": "Boshlang'ich raqam",
+        "startNumberHint": "Ushbu guruhdagi operatorlar uchun boshlang'ich SIP raqami (masalan: 100).",
         "deleteConfirm": "Ushbu guruhni o'chirishni tasdiqlaysizmi?"
     },
     "operators": {
@@ -110,6 +112,7 @@
         "operatorName": "Operator ismi",
         "extensionLabel": "Ichki raqam (Ext)",
         "extensionPlaceholder": "101",
+        "extensionHint": "Bo'sh qoldiring - guruhning boshlang'ich raqamidan kelib chiqib avtomatik yaratiladi.",
         "sipPassword": "SIP Parol",
         "passwordPlaceholder": "Parol",
         "deleteConfirm": "Ushbu operatorn o'chirishni tasdiqlaysizmi?"

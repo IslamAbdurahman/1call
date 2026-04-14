@@ -282,6 +282,9 @@ export default function OperatorsIndex({ operators, groups, onlineExtensions = [
                                         className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none"
                                     />
                                     {errors[f.key] && <p className="text-red-500 text-xs mt-1">{errors[f.key]}</p>}
+                                    {f.key === 'extension' && !editingOperator && (
+                                        <p className="text-[10px] text-gray-500 mt-1">{t('operators.extensionHint')}</p>
+                                    )}
                                 </div>
                             ))}
                             <div>

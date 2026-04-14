@@ -7,25 +7,28 @@ import AppLayout from '@/layouts/app-layout';
 interface Group {
     id: number;
     name: string;
+    start_number: number | null;
     operators_count: number;
     sip_numbers_count: number;
 }
 
 export default function GroupsIndex({ groups }: { groups: Group[] }) {
     const { t } = useTranslation();
-    const { data, setData, post, processing, reset, errors } = useForm({ name: '' });
+    const { data, setData, post, processing, reset, errors } = useForm({ name: '', start_number: '' as string | number });
     const [editingGroup, setEditingGroup] = useState<Group | null>(null);
     const [isOpen, setIsOpen] = useState(false);
     const [search, setSearch] = useState('');
 
     const filtered = groups.filter(g =>
-        g.name.toLowerCase().includes(search.toLowerCase())
+        g.name.toLowerCase().includes(search.toLowerCase()) ||
+        g.start_number?.toString().includes(search)
     );
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        const payload = { ...data, start_number: data.start_number || null };
         if (editingGroup) {
-            router.put(`/groups/${editingGroup.id}`, { name: data.name }, {
+            router.put(`/groups/${editingGroup.id}`, payload, {
                 onSuccess: () => { setIsOpen(false); reset(); setEditingGroup(null); }
             });
         } else {
@@ -35,13 +38,13 @@ export default function GroupsIndex({ groups }: { groups: Group[] }) {
 
     const openEdit = (group: Group) => {
         setEditingGroup(group);
-        setData('name', group.name);
+        setData({ name: group.name, start_number: group.start_number || '' });
         setIsOpen(true);
     };
 
     const openCreate = () => {
         setEditingGroup(null);
-        setData('name', '');
+        setData({ name: '', start_number: '' });
         setIsOpen(true);
     };
 
@@ -90,6 +93,7 @@ export default function GroupsIndex({ groups }: { groups: Group[] }) {
                                 <tr className="bg-gray-50 dark:bg-gray-700/60 border-b border-gray-200 dark:border-gray-600">
                                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-16">{t('common.id')}</th>
                                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('groups.name')}</th>
+                                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('groups.startNumber')}</th>
                                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('groups.operators')}</th>
                                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('groups.sipLines')}</th>
                                     <th className="px-4 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('common.actions')}</th>
@@ -161,6 +165,20 @@ export default function GroupsIndex({ groups }: { groups: Group[] }) {
                             </div>
                             <div className="flex gap-2 pt-2">
                                 <button type="submit" disabled={processing} className="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white text-sm font-medium rounded-lg transition-colors">
+                                    {processing ? t('common.saving') : editingGroup ? t('common.save') : t('common.create')}
+                                </button>
+                                <button type="button" onClick={() => { setIsOpen(false); reset(); }} className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors">
+                                    {t('common.cancel')}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+        </AppLayout>
+    );
+}
+"flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white text-sm font-medium rounded-lg transition-colors">
                                     {processing ? t('common.saving') : editingGroup ? t('common.save') : t('common.create')}
                                 </button>
                                 <button type="button" onClick={() => { setIsOpen(false); reset(); }} className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors">

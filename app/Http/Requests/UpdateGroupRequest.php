@@ -23,6 +23,7 @@ class UpdateGroupRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
+            'start_number' => 'nullable|integer|unique:groups,start_number,' . $this->route('group')->id,
         ];
     }
 }
