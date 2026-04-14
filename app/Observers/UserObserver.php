@@ -20,14 +20,11 @@ class UserObserver
 
     private const APP = 'Stasis';
 
-    private const APP_DATA = '1call';
-
     /**
      * Handle the User "created" event.
      */
     public function created(User $user): void
     {
-        // Spatie roli bo'lsa yoki extension mavjud bo'lsa
         if ($user->hasRole('operator') || $user->extension) {
             $this->syncAsteriskObjects($user);
         }
@@ -38,16 +35,13 @@ class UserObserver
      */
     public function updated(User $user): void
     {
-        // Agar extension o'zgarsa, eskisini o'chirib, yangisini yaratamiz
         if ($user->isDirty('extension') && $user->getOriginal('extension')) {
             $this->deleteAsteriskObjects($user->getOriginal('extension'));
         }
 
-        // Faqat operatorlar uchun sinxronizatsiya qilamiz
         if ($user->hasRole('operator') || $user->extension) {
             $this->syncAsteriskObjects($user);
         } else {
-            // Agar roli o'zgargan bo'lsa (operatorlikdan chiqarilgan bo'lsa)
             $this->deleteAsteriskObjects($user->extension);
         }
     }
@@ -68,19 +62,15 @@ class UserObserver
     private function syncAsteriskObjects(User $user): void
     {
         $appData = config('services.ari.app', '1call');
-        Log::info("Attempting Asterisk sync for User: {$user->id}, extension: {$user->extension}, app: {$appData}");
 
         if (! $user->extension) {
-            Log::warning("Sync skipped: No extension for User {$user->id}");
             return;
         }
 
         try {
             DB::transaction(function () use ($user, $appData) {
                 $ext = $user->extension;
-                Log::info("Syncing Asterisk objects for extension: {$ext}");
 
-                // ... (AOR and Auth parts remain same) ...
                 // 1. AOR (Address of Record)
                 PsAor::updateOrCreate(['id' => $ext], [
                     'max_contacts' => 1,
@@ -118,11 +108,9 @@ class UserObserver
                     [
                         'priority' => 1,
                         'app' => self::APP,
-                        'appdata' => $appData, // Dinamik nom
+                        'appdata' => $appData,
                     ]
                 );
-                
-                Log::info("Successfully synced Asterisk objects for extension: {$ext}");
             });
         } catch (\Exception $e) {
             Log::error("Asterisk sync failed for {$user->extension}: ".$e->getMessage());
