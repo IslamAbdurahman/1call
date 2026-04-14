@@ -25,7 +25,9 @@
         "group": "Группа",
         "password": "Пароль",
         "view": "Просмотр",
-        "items": "шт"
+        "items": "шт",
+        "passwordPlaceholder": "Введите пароль",
+        "startNumberPlaceholder": "100"
     },
     "sidebar": {
         "dashboard": "Панель управления",

@@ -53,8 +53,7 @@ export default function ResetPassword({ token, email }: Props) {
                                 autoComplete="new-password"
                                 className="mt-1 block w-full"
                                 autoFocus
-                                placeholder="Password"
-                            />
+                                placeholder={t('common.passwordPlaceholder')}                            />
                             <InputError message={errors.password} />
                         </div>
 

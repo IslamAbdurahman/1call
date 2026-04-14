@@ -25,7 +25,9 @@
         "group": "Guruh",
         "password": "Parol",
         "view": "Ko'rish",
-        "items": "ta"
+        "items": "ta",
+        "passwordPlaceholder": "Parolni kiriting",
+        "startNumberPlaceholder": "100"
     },
     "sidebar": {
         "dashboard": "Dashboard",

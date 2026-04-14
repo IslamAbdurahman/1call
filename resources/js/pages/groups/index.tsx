@@ -176,7 +176,7 @@ export default function GroupsIndex({ groups }: { groups: Group[] }) {
                                     type="number"
                                     value={data.start_number}
                                     onChange={e => setData('start_number', e.target.value)}
-                                    placeholder="100"
+                                    placeholder={t('common.startNumberPlaceholder')}
                                     className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none"
                                 />
                                 {errors.start_number && <p className="text-red-500 text-xs mt-1">{errors.start_number}</p>}

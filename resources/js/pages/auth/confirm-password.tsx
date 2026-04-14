@@ -24,8 +24,7 @@ export default function ConfirmPassword() {
                                 id="password"
                                 type="password"
                                 name="password"
-                                placeholder="Password"
-                                autoComplete="current-password"
+                                placeholder={t('common.passwordPlaceholder')}                                autoComplete="current-password"
                                 autoFocus
                             />
 

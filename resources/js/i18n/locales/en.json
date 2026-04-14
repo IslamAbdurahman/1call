@@ -25,7 +25,9 @@
         "group": "Group",
         "password": "Password",
         "view": "View",
-        "items": ""
+        "items": "",
+        "passwordPlaceholder": "Enter password",
+        "startNumberPlaceholder": "100"
     },
     "sidebar": {
         "dashboard": "Dashboard",
