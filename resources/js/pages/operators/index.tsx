@@ -1,8 +1,8 @@
 import { Head, useForm, router } from '@inertiajs/react';
+import { Pencil, Trash2, Plus, Search, Headset, X } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import AppLayout from '@/layouts/app-layout';
-import { useState, useEffect } from 'react';
-import { Pencil, Trash2, Plus, Search, Headset, X, Wifi, WifiOff } from 'lucide-react';
 
 interface Operator {
     id: number;
@@ -23,16 +23,16 @@ export default function OperatorsIndex({ operators, groups, onlineExtensions = [
     const { data, setData, post, processing, reset, errors } = useForm({
         name: '', extension: '', password: '', group_id: '',
     });
-    const [editingOperator, setEditingOperator] = useState<any>(null);
+    const [editingOperator, setEditingOperator] = useState<Operator | null>(null);
     const [isOpen, setIsOpen] = useState(false);
     const [search, setSearch] = useState('');
     const [groupFilter, setGroupFilter] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
 
     useEffect(() => {
-        const channel = window.Echo.channel('calls')
-            .listen('.CallStateChanged', (e: any) => {
-                router.reload({ only: ['busyExtensions', 'onlineExtensions'], preserveState: true, preserveScroll: true });
+        window.Echo.private('calls')
+            .listen('.CallStateChanged', () => {
+                router.reload({ only: ['busyExtensions', 'onlineExtensions'] });
             });
 
         return () => {

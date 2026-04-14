@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Contact\CreateContactAction;
+use App\Actions\Contact\DeleteContactAction;
+use App\Actions\Contact\UpdateContactAction;
+use App\Http\Requests\StoreContactRequest;
+use App\Http\Requests\UpdateContactRequest;
 use App\Models\Contact;
 use App\Models\Group;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ContactController extends Controller
@@ -17,33 +21,23 @@ class ContactController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreContactRequest $request, CreateContactAction $createContactAction)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:255',
-            'group_id' => 'nullable|exists:groups,id',
-        ]);
-        Contact::create($validated);
+        $createContactAction->execute($request->validated());
 
         return redirect()->back();
     }
 
-    public function update(Request $request, Contact $contact)
+    public function update(UpdateContactRequest $request, Contact $contact, UpdateContactAction $updateContactAction)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:255',
-            'group_id' => 'nullable|exists:groups,id',
-        ]);
-        $contact->update($validated);
+        $updateContactAction->execute($contact, $request->validated());
 
         return redirect()->back();
     }
 
-    public function destroy(Contact $contact)
+    public function destroy(Contact $contact, DeleteContactAction $deleteContactAction)
     {
-        $contact->delete();
+        $deleteContactAction->execute($contact);
 
         return redirect()->back();
     }

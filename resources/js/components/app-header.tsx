@@ -1,6 +1,6 @@
 import { Link, usePage } from '@inertiajs/react';
+import { LayoutGrid, Menu, Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-react';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

@@ -1,6 +1,6 @@
 import { Link } from '@inertiajs/react';
+import { LayoutGrid, Users, Headset, Phone, Contact, History, MessageSquare, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { BookOpen, Folder, LayoutGrid, Users, Headset, Phone, Contact, History, MessageSquare, Globe } from 'lucide-react';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -14,7 +14,6 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 import AppLogo from './app-logo';
 

@@ -1,8 +1,8 @@
 import { Head, useForm, router, Link } from '@inertiajs/react';
+import { Pencil, Trash2, Plus, Search, Contact, X } from 'lucide-react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AppLayout from '@/layouts/app-layout';
-import { useState } from 'react';
-import { Pencil, Trash2, Plus, Search, Contact, X } from 'lucide-react';
 
 interface ContactItem {
     id: number;
@@ -17,12 +17,21 @@ interface Group {
     name: string;
 }
 
-export default function ContactsIndex({ contacts, groups }: { contacts: any; groups: Group[] }) {
+interface PaginatedContacts {
+    total: number;
+    from: number | null;
+    to: number | null;
+    last_page: number;
+    data: ContactItem[];
+    links: { url: string | null; label: string; active: boolean }[];
+}
+
+export default function ContactsIndex({ contacts, groups }: { contacts: PaginatedContacts; groups: Group[] }) {
     const { t } = useTranslation();
     const { data, setData, post, processing, reset, errors } = useForm({
         name: '', phone: '', group_id: '',
     });
-    const [editingContact, setEditingContact] = useState<any>(null);
+    const [editingContact, setEditingContact] = useState<ContactItem | null>(null);
     const [isOpen, setIsOpen] = useState(false);
     const [search, setSearch] = useState('');
     const [groupFilter, setGroupFilter] = useState('');
@@ -169,7 +178,7 @@ export default function ContactsIndex({ contacts, groups }: { contacts: any; gro
                         <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-700 flex flex-wrap items-center justify-between gap-2 text-sm text-gray-500 dark:text-gray-400">
                             <span>{contacts.from ?? 0} – {contacts.to ?? 0} / {contacts.total}</span>
                             <div className="flex flex-wrap gap-1">
-                                {contacts.links.map((link: any, i: number) => (
+                                {contacts.links.map((link: { url: string | null; label: string; active: boolean }, i: number) => (
                                     link.url ? (
                                         <Link key={i} href={link.url} className={`px-3 py-1 rounded-lg border text-xs transition-colors ${link.active ? 'bg-indigo-600 text-white border-indigo-600' : 'border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'}`} dangerouslySetInnerHTML={{ __html: link.label }} />
                                     ) : (

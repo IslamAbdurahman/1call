@@ -1,8 +1,8 @@
 import { Head, useForm, router } from '@inertiajs/react';
+import { Pencil, Trash2, Plus, Search, Globe, X, CheckCircle2, XCircle } from 'lucide-react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AppLayout from '@/layouts/app-layout';
-import { useState } from 'react';
-import { Pencil, Trash2, Plus, Search, Globe, X, CheckCircle2, XCircle } from 'lucide-react';
 
 interface Trunk {
     id: number;

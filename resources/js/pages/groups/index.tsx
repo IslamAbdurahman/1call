@@ -1,8 +1,8 @@
 import { Head, useForm, router } from '@inertiajs/react';
+import { Pencil, Trash2, Plus, Search, Users, Layers } from 'lucide-react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AppLayout from '@/layouts/app-layout';
-import { useState } from 'react';
-import { Pencil, Trash2, Plus, Search, Users, Layers } from 'lucide-react';
 
 interface Group {
     id: number;
@@ -14,7 +14,7 @@ interface Group {
 export default function GroupsIndex({ groups }: { groups: Group[] }) {
     const { t } = useTranslation();
     const { data, setData, post, processing, reset, errors } = useForm({ name: '' });
-    const [editingGroup, setEditingGroup] = useState<any>(null);
+    const [editingGroup, setEditingGroup] = useState<Group | null>(null);
     const [isOpen, setIsOpen] = useState(false);
     const [search, setSearch] = useState('');
 

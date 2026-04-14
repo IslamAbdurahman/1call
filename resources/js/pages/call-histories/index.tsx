@@ -1,11 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { useTranslation } from 'react-i18next';
-import AppLayout from '@/layouts/app-layout';
-import { useState, useRef } from 'react';
 import {
     PhoneIncoming,
     PhoneOutgoing,
-    PhoneMissed,
     Play,
     Pause,
     Square,
@@ -17,6 +13,9 @@ import {
     Mic,
     MicOff,
 } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import AppLayout from '@/layouts/app-layout';
 
 interface CallHistoryItem {
     id: number;

@@ -1,6 +1,6 @@
+import type Echo from 'laravel-echo';
+import type Pusher from 'pusher-js';
 import type { Auth } from '@/types/auth';
-import Echo from 'laravel-echo';
-import Pusher from 'pusher-js';
 
 declare module '@inertiajs/core' {
     export interface InertiaConfig {

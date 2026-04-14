@@ -1,6 +1,4 @@
 import { Head, Link, usePage } from '@inertiajs/react';
-import { dashboard, login, register } from '@/routes';
-import { useState, useEffect, useRef } from 'react';
 import {
     Phone,
     Headset,
@@ -17,9 +15,9 @@ import {
     CheckCircle2,
     ArrowRight,
     Mic,
-    Contact,
-    History,
 } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { dashboard, login, register } from '@/routes';
 
 // ─── Translations ────────────────────────────────────────────
 const translations = {
@@ -169,22 +167,51 @@ function AnimatedCounter({ end, suffix = '' }: { end: number; suffix?: string })
     );
 }
 
+interface Particle {
+    id: number;
+    width: string;
+    height: string;
+    left: string;
+    top: string;
+    background: string;
+    animation: string;
+    animationDelay: string;
+}
+
 // ─── Floating Particles ─────────────────────────────────────
 function FloatingParticles() {
+    const [particles, setParticles] = useState<Particle[]>([]);
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setParticles(Array.from({ length: 20 }).map((_, i) => ({
+                id: i,
+                width: `${Math.random() * 6 + 2}px`,
+                height: `${Math.random() * 6 + 2}px`,
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                background: `hsl(${210 + Math.random() * 60}, 80%, 70%)`,
+                animation: `float ${6 + Math.random() * 8}s ease-in-out infinite`,
+                animationDelay: `${Math.random() * 5}s`,
+            })));
+        }, 0);
+        return () => clearTimeout(timeout);
+    }, []);
+
     return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {Array.from({ length: 20 }).map((_, i) => (
+            {particles.map((particle) => (
                 <div
-                    key={i}
+                    key={particle.id}
                     className="absolute rounded-full opacity-20"
                     style={{
-                        width: `${Math.random() * 6 + 2}px`,
-                        height: `${Math.random() * 6 + 2}px`,
-                        left: `${Math.random() * 100}%`,
-                        top: `${Math.random() * 100}%`,
-                        background: `hsl(${210 + Math.random() * 60}, 80%, 70%)`,
-                        animation: `float ${6 + Math.random() * 8}s ease-in-out infinite`,
-                        animationDelay: `${Math.random() * 5}s`,
+                        width: particle.width,
+                        height: particle.height,
+                        left: particle.left,
+                        top: particle.top,
+                        background: particle.background,
+                        animation: particle.animation,
+                        animationDelay: particle.animationDelay,
                     }}
                 />
             ))}
@@ -361,7 +388,7 @@ export default function Welcome({ canRegister = true }: { canRegister?: boolean 
                                 </div>
 
                                 {/* Auth buttons */}
-                                {(auth as any)?.user ? (
+                                {auth.user ? (
                                     <Link
                                         href={dashboard()}
                                         className="rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-500/30 transition-all hover:shadow-xl hover:shadow-indigo-500/40 hover:scale-[1.02]"
@@ -431,7 +458,7 @@ export default function Welcome({ canRegister = true }: { canRegister?: boolean 
                                 </p>
                                 <div className="flex flex-wrap gap-4">
                                     <Link
-                                        href={(auth as any)?.user ? dashboard() : login()}
+                                        href={auth.user ? dashboard() : login()}
                                         className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 px-8 py-3.5 text-base font-semibold text-white shadow-2xl shadow-indigo-500/30 transition-all hover:shadow-3xl hover:shadow-indigo-500/40 hover:scale-[1.03]"
                                     >
                                         {t.hero.cta}
@@ -612,7 +639,7 @@ export default function Welcome({ canRegister = true }: { canRegister?: boolean 
                                     {t.hero.subtitle}
                                 </p>
                                 <Link
-                                    href={(auth as any)?.user ? dashboard() : login()}
+                                    href={auth.user ? dashboard() : login()}
                                     className="group inline-flex items-center gap-2 rounded-xl bg-white px-8 py-3.5 text-base font-semibold text-indigo-700 shadow-2xl transition-all hover:scale-[1.03] hover:shadow-3xl"
                                 >
                                     {t.hero.cta}

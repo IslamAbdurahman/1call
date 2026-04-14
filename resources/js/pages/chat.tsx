@@ -1,13 +1,13 @@
-import AppLayout from '@/layouts/app-layout';
 import { Head, usePage } from '@inertiajs/react';
-import { useEffect, useState, useRef, useMemo, memo } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import axios from 'axios';
+import { MoreVertical, Check, CheckCheck, Users, Search, ArrowLeft, X } from 'lucide-react';
+import { useEffect, useState, useRef, useMemo, memo, useCallback } from 'react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { MoreVertical, Check, CheckCheck, Users, User as UserIcon, Search, ArrowLeft, X } from 'lucide-react';
-import axios from 'axios';
+import { Input } from '@/components/ui/input';
+import AppLayout from '@/layouts/app-layout';
 
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -97,7 +97,7 @@ const OperatorItem = memo(({
 OperatorItem.displayName = 'OperatorItem';
 
 export default function Chat({ operators, generalUnreadCount }: ChatProps) {
-    const { auth } = usePage().props as any;
+    const { auth } = usePage<{ auth: { user: User } }>().props;
     const [messages, setMessages] = useState<Message[]>([]);
     const [selectedReceiverId, setSelectedReceiverId] = useState<number | null>(null);
     const [isGeneralChat, setIsGeneralChat] = useState(false);
@@ -120,6 +120,36 @@ export default function Chat({ operators, generalUnreadCount }: ChatProps) {
 
     const activeChatId = isGeneralChat ? 'general' : selectedReceiverId;
 
+    const markAsRead = useCallback(async (messageId: number) => {
+        try {
+            await axios.post(`/chat/${messageId}/read`);
+        } catch (error) {
+            console.error('Failed to mark as read', error);
+        }
+    }, []);
+
+    const markVisibleAsRead = useCallback((msgs: Message[]) => {
+        msgs.forEach(msg => {
+            if (msg.user.id !== auth.user.id) {
+                const hasRead = msg.reads && msg.reads.some(r => r.id === auth.user.id);
+                if (!hasRead) {
+                    markAsRead(msg.id);
+                }
+            }
+        });
+    }, [auth.user.id, markAsRead]);
+
+    const fetchMessages = useCallback(async (receiverId: number | null) => {
+        try {
+            const url = receiverId ? `/chat/messages/${receiverId}` : '/chat/messages';
+            const response = await axios.get(url);
+            setMessages(response.data);
+            markVisibleAsRead(response.data);
+        } catch (error) {
+            console.error('Failed to fetch messages', error);
+        }
+    }, [markVisibleAsRead]);
+
     useEffect(() => {
         if (activeChatId !== undefined) {
             fetchMessages(selectedReceiverId);
@@ -132,78 +162,11 @@ export default function Chat({ operators, generalUnreadCount }: ChatProps) {
                 ));
             }
         }
-    }, [selectedReceiverId, isGeneralChat]);
-
-    const fetchMessages = async (receiverId: number | null) => {
-        try {
-            const url = receiverId ? `/chat/messages/${receiverId}` : '/chat/messages';
-            const response = await axios.get(url);
-            setMessages(response.data);
-            markVisibleAsRead(response.data);
-        } catch (error) {
-            console.error('Failed to fetch messages', error);
-        }
-    };
-
-    const markAsRead = async (messageId: number) => {
-        try {
-            await axios.post(`/chat/${messageId}/read`);
-        } catch (error) {
-            console.error('Failed to mark as read', error);
-        }
-    };
-
-    const markVisibleAsRead = (msgs: Message[]) => {
-        msgs.forEach(msg => {
-            if (msg.user.id !== auth.user.id) {
-                const hasRead = msg.reads && msg.reads.some(r => r.id === auth.user.id);
-                if (!hasRead) {
-                    markAsRead(msg.id);
-                }
-            }
-        });
-    };
-
-    useEffect(() => {
-        const channelGeneral = window.Echo.join('chat')
-            .here((users: any[]) => {
-                setOnlineUsers(users.map(u => u.id));
-            })
-            .joining((user: any) => {
-                setOnlineUsers(prev => [...new Set([...prev, user.id])]);
-            })
-            .leaving((user: any) => {
-                setOnlineUsers(prev => prev.filter(id => id !== user.id));
-            })
-            .listen('.message.sent', (e: Message) => {
-                if (e.receiver_id === null) {
-                    handleIncomingMessage(e, null);
-                }
-            })
-            .listen('.message.read', (e: any) => {
-                if (e.receiver_id === null) {
-                    handleIncomingRead(e);
-                }
-            });
-
-        const channelPrivate = window.Echo.private(`chat.${auth.user.id}`)
-            .listen('.message.sent', (e: Message) => {
-                const relevantReceiver = e.user.id === auth.user.id ? e.receiver_id : e.user.id;
-                handleIncomingMessage(e, relevantReceiver);
-            })
-            .listen('.message.read', (e: any) => {
-                handleIncomingRead(e);
-            });
-
-        return () => {
-            window.Echo.leave('chat');
-            window.Echo.leave(`chat.${auth.user.id}`);
-        };
-    }, [auth.user.id, selectedReceiverId, isGeneralChat]);
+    }, [selectedReceiverId, isGeneralChat, activeChatId, fetchMessages]);
 
     const processedMessagesRef = useRef<Set<number>>(new Set());
 
-    const handleIncomingMessage = (e: Message, relevantReceiverId: number | null) => {
+    const handleIncomingMessage = useCallback((e: Message, relevantReceiverId: number | null) => {
         // Prevent double processing the same message
         if (processedMessagesRef.current.has(e.id)) return;
         processedMessagesRef.current.add(e.id);
@@ -239,16 +202,53 @@ export default function Chat({ operators, generalUnreadCount }: ChatProps) {
                 }
             }
         }
-    };
+    }, [auth.user.id, isGeneralChat, selectedReceiverId, markAsRead]);
 
-    const handleIncomingRead = (e: any) => {
+    const handleIncomingRead = useCallback((e: { id: number, reads: ReadReceipt[] }) => {
         setMessages((prev) => prev.map(msg => {
             if (msg.id === e.id) {
                 return { ...msg, reads: e.reads };
             }
             return msg;
         }));
-    };
+    }, []);
+
+    useEffect(() => {
+        window.Echo.join('chat')
+            .here((users: User[]) => {
+                setOnlineUsers(users.map(u => u.id));
+            })
+            .joining((user: User) => {
+                setOnlineUsers(prev => [...new Set([...prev, user.id])]);
+            })
+            .leaving((user: User) => {
+                setOnlineUsers(prev => prev.filter(id => id !== user.id));
+            })
+            .listen('.message.sent', (e: Message) => {
+                if (e.receiver_id === null) {
+                    handleIncomingMessage(e, null);
+                }
+            })
+            .listen('.message.read', (e: { id: number, reads: ReadReceipt[], receiver_id: number | null }) => {
+                if (e.receiver_id === null) {
+                    handleIncomingRead(e);
+                }
+            });
+
+        window.Echo.private(`chat.${auth.user.id}`)
+            .listen('.message.sent', (e: Message) => {
+                const relevantReceiver = e.user.id === auth.user.id ? e.receiver_id : e.user.id;
+                handleIncomingMessage(e, relevantReceiver);
+            })
+            .listen('.message.read', (e: { id: number, reads: ReadReceipt[] }) => {
+                handleIncomingRead(e);
+            });
+
+        return () => {
+            window.Echo.leave('chat');
+            window.Echo.leave(`chat.${auth.user.id}`);
+        };
+    }, [auth.user.id, handleIncomingMessage, handleIncomingRead]);
 
     useEffect(() => {
         if (scrollRef.current) {

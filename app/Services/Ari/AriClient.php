@@ -14,10 +14,10 @@ class AriClient
 
     public function __construct()
     {
-        $this->url = env('ARI_HOST', 'localhost:8088');
-        $this->app = env('ARI_APP', '1call');
-        $this->user = env('ARI_USER', '1call');
-        $this->password = env('ARI_PASSWORD', '11221122');
+        $this->url = config('asterisk.ari_host', 'localhost:8088');
+        $this->app = config('asterisk.ari_app', '1call');
+        $this->user = config('asterisk.ari_user', '1call');
+        $this->password = config('asterisk.ari_password', '11221122');
 
         $this->url = rtrim($this->url, '/');
         if (! str_contains($this->url, '/ari')) {

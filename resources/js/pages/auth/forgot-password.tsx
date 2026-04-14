@@ -1,7 +1,7 @@
 // Components
 import { Form, Head } from '@inertiajs/react';
-import { useTranslation } from 'react-i18next';
 import { LoaderCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';

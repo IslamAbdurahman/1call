@@ -1,12 +1,12 @@
 import { Head, Link } from '@inertiajs/react';
-import { useTranslation } from 'react-i18next';
-import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
-import type { BreadcrumbItem } from '@/types';
 import {
     Users, Headset, Phone, Contact, History, PhoneIncoming,
     PhoneMissed, TrendingUp, Activity,
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import AppLayout from '@/layouts/app-layout';
+import { dashboard } from '@/routes';
+import type { BreadcrumbItem } from '@/types';
 
 interface Stats {
     groups: number;

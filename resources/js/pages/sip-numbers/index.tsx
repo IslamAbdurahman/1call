@@ -1,8 +1,8 @@
 import { Head, useForm, router } from '@inertiajs/react';
+import { Pencil, Trash2, Plus, Search, Phone, X } from 'lucide-react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AppLayout from '@/layouts/app-layout';
-import { useState } from 'react';
-import { Pencil, Trash2, Plus, Search, Phone, X } from 'lucide-react';
 
 interface SipNumber {
     id: number;
@@ -19,7 +19,7 @@ interface Group {
 export default function SipNumbersIndex({ sipNumbers, groups }: { sipNumbers: SipNumber[]; groups: Group[] }) {
     const { t } = useTranslation();
     const { data, setData, post, processing, reset, errors } = useForm({ number: '', group_id: '' });
-    const [editingSip, setEditingSip] = useState<any>(null);
+    const [editingSip, setEditingSip] = useState<SipNumber | null>(null);
     const [isOpen, setIsOpen] = useState(false);
     const [search, setSearch] = useState('');
     const [groupFilter, setGroupFilter] = useState('');

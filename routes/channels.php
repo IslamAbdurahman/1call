@@ -13,3 +13,7 @@ Broadcast::channel('chat', function ($user) {
 Broadcast::channel('chat.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+
+Broadcast::channel('calls', function ($user) {
+    return $user !== null;
+});

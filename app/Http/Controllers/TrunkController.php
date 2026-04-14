@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Trunk\CreateTrunkAction;
+use App\Actions\Trunk\DeleteTrunkAction;
+use App\Actions\Trunk\UpdateTrunkAction;
+use App\Http\Requests\StoreTrunkRequest;
+use App\Http\Requests\UpdateTrunkRequest;
 use App\Models\Trunk;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class TrunkController extends Controller
@@ -15,47 +19,23 @@ class TrunkController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreTrunkRequest $request, CreateTrunkAction $createTrunkAction)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|unique:trunks,name',
-            'host' => 'required|string',
-            'port' => 'required|integer',
-            'username' => 'nullable|string',
-            'password' => 'nullable|string',
-            'did' => 'nullable|string',
-            'transport' => 'required|string',
-            'context' => 'required|string',
-            'is_active' => 'required|boolean',
-        ]);
-
-        Trunk::create($validated);
+        $createTrunkAction->execute($request->validated());
 
         return redirect()->back();
     }
 
-    public function update(Request $request, Trunk $trunk)
+    public function update(UpdateTrunkRequest $request, Trunk $trunk, UpdateTrunkAction $updateTrunkAction)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|unique:trunks,name,' . $trunk->id,
-            'host' => 'required|string',
-            'port' => 'required|integer',
-            'username' => 'nullable|string',
-            'password' => 'nullable|string',
-            'did' => 'nullable|string',
-            'transport' => 'required|string',
-            'context' => 'required|string',
-            'is_active' => 'required|boolean',
-        ]);
-
-        $trunk->update($validated);
+        $updateTrunkAction->execute($trunk, $request->validated());
 
         return redirect()->back();
     }
 
-    public function destroy(Trunk $trunk)
+    public function destroy(Trunk $trunk, DeleteTrunkAction $deleteTrunkAction)
     {
-        $trunk->delete();
+        $deleteTrunkAction->execute($trunk);
 
         return redirect()->back();
     }

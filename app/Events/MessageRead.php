@@ -59,7 +59,8 @@ class MessageRead implements ShouldBroadcast
         return [
             'id' => $this->message->id,
             'receiver_id' => $this->message->receiver_id,
-            'reads' => $this->message->reads->map(function ($user) {
+            'reads' => $this->message->reads->map(function (mixed $user) {
+                /** @var \App\Models\User & object{pivot: object{read_at: string|null}} $user */
                 return [
                     'id' => $user->id,
                     'name' => $user->name,

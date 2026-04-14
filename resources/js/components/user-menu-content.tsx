@@ -1,6 +1,6 @@
 import { Link, router } from '@inertiajs/react';
-import { useTranslation } from 'react-i18next';
 import { LogOut, Settings } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import {
     DropdownMenuGroup,
     DropdownMenuItem,

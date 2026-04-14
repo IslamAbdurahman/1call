@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Operator\CreateOperatorAction;
+use App\Actions\Operator\DeleteOperatorAction;
+use App\Actions\Operator\UpdateOperatorAction;
+use App\Http\Requests\StoreOperatorRequest;
+use App\Http\Requests\UpdateOperatorRequest;
 use App\Models\Group;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 use Inertia\Inertia;
 
@@ -28,11 +31,11 @@ class OperatorController extends Controller
         // Asterisk ARI orqali hozirda gaplashayotgan/band raqamlarni olish
         $busyExtensions = [];
         try {
-            $ariUrl = env('ARI_HOST', 'localhost:8088');
+            $ariUrl = config('asterisk.ari_host', 'localhost:8088');
             $ariUrl = rtrim(str_replace(['http://', 'https://'], '', $ariUrl), '/');
             $ariUrl = "http://{$ariUrl}/ari/channels";
-            $ariUser = env('ARI_USER', '1call');
-            $ariPass = env('ARI_PASSWORD', '11221122');
+            $ariUser = config('asterisk.ari_user', '1call');
+            $ariPass = config('asterisk.ari_password', '11221122');
 
             $response = \Illuminate\Support\Facades\Http::withBasicAuth($ariUser, $ariPass)->get($ariUrl);
 
@@ -57,58 +60,23 @@ class OperatorController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreOperatorRequest $request, CreateOperatorAction $createOperatorAction)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'extension' => 'required|string|unique:users,extension',
-            'password' => 'required|string|min:4',
-            'group_id' => 'required|exists:groups,id',
-        ]);
-
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => null,
-            'extension' => $validated['extension'],
-            'password' => Hash::make($validated['password']),
-            'sip_password' => $validated['password'], // ochiq matnli parol
-            'group_id' => $validated['group_id'],
-        ]);
-
-        $user->assignRole('operator');
+        $createOperatorAction->execute($request->validated());
 
         return redirect()->back();
     }
 
-    public function update(Request $request, User $operator)
+    public function update(UpdateOperatorRequest $request, User $operator, UpdateOperatorAction $updateOperatorAction)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'extension' => 'required|string|unique:users,extension,'.$operator->id,
-            'password' => 'nullable|string|min:4',
-            'group_id' => 'required|exists:groups,id',
-        ]);
-
-        $data = [
-            'name' => $validated['name'],
-            'extension' => $validated['extension'],
-            'email' => $validated['extension'].'@1call.uz',
-            'group_id' => $validated['group_id'],
-        ];
-
-        if (! empty($validated['password'])) {
-            $data['password'] = Hash::make($validated['password']);
-            $data['sip_password'] = $validated['password'];
-        }
-
-        $operator->update($data);
+        $updateOperatorAction->execute($operator, $request->validated());
 
         return redirect()->back();
     }
 
-    public function destroy(User $operator)
+    public function destroy(User $operator, DeleteOperatorAction $deleteOperatorAction)
     {
-        $operator->delete();
+        $deleteOperatorAction->execute($operator);
 
         return redirect()->back();
     }

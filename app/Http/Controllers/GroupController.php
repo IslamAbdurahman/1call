@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Group\CreateGroupAction;
+use App\Actions\Group\DeleteGroupAction;
+use App\Actions\Group\UpdateGroupAction;
+use App\Http\Requests\StoreGroupRequest;
+use App\Http\Requests\UpdateGroupRequest;
 use App\Models\Group;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class GroupController extends Controller
@@ -15,25 +19,23 @@ class GroupController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreGroupRequest $request, CreateGroupAction $createGroupAction)
     {
-        $validated = $request->validate(['name' => 'required|string|max:255']);
-        Group::create($validated);
+        $createGroupAction->execute($request->validated());
 
         return redirect()->back();
     }
 
-    public function update(Request $request, Group $group)
+    public function update(UpdateGroupRequest $request, Group $group, UpdateGroupAction $updateGroupAction)
     {
-        $validated = $request->validate(['name' => 'required|string|max:255']);
-        $group->update($validated);
+        $updateGroupAction->execute($group, $request->validated());
 
         return redirect()->back();
     }
 
-    public function destroy(Group $group)
+    public function destroy(Group $group, DeleteGroupAction $deleteGroupAction)
     {
-        $group->delete();
+        $deleteGroupAction->execute($group);
 
         return redirect()->back();
     }

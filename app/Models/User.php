@@ -10,6 +10,11 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Spatie\Permission\Traits\HasRoles;
 
+/**
+ * @property int $unread_count
+ * @property string|null $last_message_at
+ * @property bool $has_conversation
+ */
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
@@ -55,7 +60,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function group()
+    public function group(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Group::class);
     }

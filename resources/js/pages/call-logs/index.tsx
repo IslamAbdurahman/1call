@@ -1,9 +1,33 @@
 import { Head, Link } from '@inertiajs/react';
+import { FileText } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import AppLayout from '@/layouts/app-layout';
-import { FileText } from 'lucide-react';
 
-export default function CallLogsIndex({ logs }: { logs: any }) {
+interface CallLog {
+    id: number;
+    caller_id: string;
+    callee_id: string;
+    status: string;
+    duration: number;
+    direction: string;
+    created_at: string;
+    start_time: string;
+    operator?: { name: string };
+    sip_number?: { number: string };
+    contact?: { name: string; phone: string };
+    [key: string]: unknown;
+}
+
+interface PaginatedLogs {
+    total: number;
+    from: number | null;
+    to: number | null;
+    last_page: number;
+    data: CallLog[];
+    links: { url: string | null; label: string; active: boolean }[];
+}
+
+export default function CallLogsIndex({ logs }: { logs: PaginatedLogs }) {
     const { t } = useTranslation();
 
     return (
@@ -39,7 +63,7 @@ export default function CallLogsIndex({ logs }: { logs: any }) {
                                             </div>
                                         </td>
                                     </tr>
-                                ) : logs.data.map((log: any) => (
+                                ) : logs.data.map((log: CallLog) => (
                                     <tr key={log.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/40 transition-colors">
                                         <td className="px-4 py-3 text-xs text-gray-400 font-mono">{log.id}</td>
                                         <td className="px-4 py-3 text-xs text-gray-700 dark:text-gray-200">{log.start_time}</td>
@@ -64,7 +88,7 @@ export default function CallLogsIndex({ logs }: { logs: any }) {
                         <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-700 flex flex-wrap items-center justify-between gap-2 text-sm text-gray-500 dark:text-gray-400">
                             <span>{logs.from ?? 0} – {logs.to ?? 0} / {logs.total}</span>
                             <div className="flex flex-wrap gap-1">
-                                {logs.links.map((link: any, i: number) => (
+                                {logs.links.map((link: { url: string | null; label: string; active: boolean }, i: number) => (
                                     link.url ? (
                                         <Link key={i} href={link.url} className={`px-3 py-1 rounded-lg border text-xs transition-colors ${link.active ? 'bg-indigo-600 text-white border-indigo-600' : 'border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'}`} dangerouslySetInnerHTML={{ __html: link.label }} />
                                     ) : (

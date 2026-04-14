@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\SipNumber\CreateSipNumberAction;
+use App\Actions\SipNumber\DeleteSipNumberAction;
+use App\Actions\SipNumber\UpdateSipNumberAction;
+use App\Http\Requests\StoreSipNumberRequest;
+use App\Http\Requests\UpdateSipNumberRequest;
 use App\Models\Group;
 use App\Models\SipNumber;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class SipNumberController extends Controller
@@ -17,31 +21,23 @@ class SipNumberController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreSipNumberRequest $request, CreateSipNumberAction $createSipNumberAction)
     {
-        $validated = $request->validate([
-            'number' => 'required|string|unique:sip_numbers,number',
-            'group_id' => 'nullable|exists:groups,id',
-        ]);
-        SipNumber::create($validated);
+        $createSipNumberAction->execute($request->validated());
 
         return redirect()->back();
     }
 
-    public function update(Request $request, SipNumber $sipNumber)
+    public function update(UpdateSipNumberRequest $request, SipNumber $sipNumber, UpdateSipNumberAction $updateSipNumberAction)
     {
-        $validated = $request->validate([
-            'number' => 'required|string|unique:sip_numbers,number,'.$sipNumber->id,
-            'group_id' => 'nullable|exists:groups,id',
-        ]);
-        $sipNumber->update($validated);
+        $updateSipNumberAction->execute($sipNumber, $request->validated());
 
         return redirect()->back();
     }
 
-    public function destroy(SipNumber $sipNumber)
+    public function destroy(SipNumber $sipNumber, DeleteSipNumberAction $deleteSipNumberAction)
     {
-        $sipNumber->delete();
+        $deleteSipNumberAction->execute($sipNumber);
 
         return redirect()->back();
     }

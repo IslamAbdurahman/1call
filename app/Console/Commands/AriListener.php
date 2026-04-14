@@ -50,11 +50,11 @@ class AriListener extends Command
         parent::__construct();
         $this->ariClient = $ariClient;
 
-        $this->app = env('ARI_APP', '1call');
-        $this->user = env('ARI_USER', '1call');
-        $this->password = env('ARI_PASSWORD', '11221122');
+        $this->app = config('services.ari.app', '1call');
+        $this->user = config('services.ari.user', '1call');
+        $this->password = config('services.ari.password', '11221122');
         // host for websocket should not have protocol, e.g. localhost:8088
-        $this->host = env('ARI_HOST', 'localhost:8088');
+        $this->host = config('services.ari.host', 'localhost:8088');
 
         // Remove http/https if present for WS connection
         $this->host = str_replace(['http://', 'https://'], '', $this->host);
@@ -103,7 +103,7 @@ class AriListener extends Command
                 });
             });
 
-        }, function (Exception $e) {
+        }, function (\Throwable $e) {
             $this->error("❌ Could not connect: {$e->getMessage()}. Reconnecting in 3 seconds...");
             $this->getLoop()->addTimer(3, function () {
                 $this->connectToAri();

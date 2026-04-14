@@ -66,7 +66,8 @@ class MessageSent implements ShouldBroadcast
             ],
             'receiver_id' => $this->message->receiver_id,
             'created_at' => $this->message->created_at->toISOString(),
-            'reads' => $this->message->reads->map(function ($user) {
+            'reads' => $this->message->reads->map(function (mixed $user) {
+                /** @var \App\Models\User & object{pivot: object{read_at: string|null}} $user */
                 return [
                     'id' => $user->id,
                     'name' => $user->name,
