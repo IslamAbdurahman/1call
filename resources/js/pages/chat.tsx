@@ -605,6 +605,3 @@ export default function Chat({ operators, generalUnreadCount }: ChatProps) {
         </AppLayout>
     );
 }
-t>
-    );
-}
