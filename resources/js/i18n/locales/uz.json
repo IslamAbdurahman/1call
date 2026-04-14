@@ -131,7 +131,14 @@
         "title": "Chat",
         "generalChat": "Umumiy Chat",
         "readBy": "Kimlar o'qidi",
-        "allOperatorsGroup": "Barcha operatorlar guruhi"
+        "allOperatorsGroup": "Barcha operatorlar guruhi",
+        "searchPlaceholder": "Operatorlarni qidirish...",
+        "typeMessage": "Xabar yozing...",
+        "send": "Yuborish",
+        "noMessages": "Hozircha xabarlar yo'q...",
+        "noReadBy": "Hali hech kim o'qimagan",
+        "selectChat": "Suhbatni tanlang",
+        "searchMessages": "Xabarlarni qidirish..."
     },
     "contacts": {
         "title": "Kontaktlar",

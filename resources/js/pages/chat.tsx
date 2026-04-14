@@ -561,7 +561,7 @@ export default function Chat({ operators, generalUnreadCount }: ChatProps) {
 
                             <form onSubmit={submit} className="p-4 border-t bg-background shrink-0 flex gap-3 items-end">
                                 <Input
-                                    placeholder="Xabar yozing..."
+                                    placeholder={t('chat.typeMessage')}
                                     value={newMessage}
                                     onChange={(e) => setNewMessage(e.target.value)}
                                     disabled={processing}
@@ -569,7 +569,7 @@ export default function Chat({ operators, generalUnreadCount }: ChatProps) {
                                     autoComplete="off"
                                 />
                                 <Button type="submit" size="lg" disabled={processing || !newMessage.trim()} className="rounded-full shrink-0 px-6">
-                                    {processing ? '...' : 'Yuborish'}
+                                    {processing ? '...' : t('chat.send')}
                                 </Button>
                             </form>
                         </>
