@@ -122,6 +122,11 @@
         "brand": "1Call",
         "desc": "Premium Call Center System"
     },
+    "chat": {
+        "title": "Chat",
+        "generalChat": "General Chat",
+        "readBy": "Read by"
+    },
     "contacts": {
         "title": "Contacts",
         "total": "Total: {{count}} contacts",

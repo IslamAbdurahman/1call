@@ -122,6 +122,11 @@
         "brand": "1Call",
         "desc": "Премиум система Call Center"
     },
+    "chat": {
+        "title": "Чат",
+        "generalChat": "Общий чат",
+        "readBy": "Кто прочитал"
+    },
     "contacts": {
         "title": "Контакты",
         "total": "Всего: {{count}} контактов",

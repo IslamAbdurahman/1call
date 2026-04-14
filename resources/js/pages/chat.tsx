@@ -370,8 +370,8 @@ export default function Chat({ operators, generalUnreadCount }: ChatProps) {
                                 <Users className="h-5 w-5" />
                             </div>
                             <div className="flex-1 min-w-0">
-                                <div className="font-medium flex justify-between items-center">
-                                    <span>Umumiy Chat</span>
+                                <span className="font-medium flex justify-between items-center">
+                                    <span>{t('chat.generalChat')}</span>
                                     {generalUnread > 0 && (
                                         <span className="bg-primary text-primary-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
                                             {generalUnread}
@@ -577,7 +577,7 @@ export default function Chat({ operators, generalUnreadCount }: ChatProps) {
             <Dialog open={readByModalOpen} onOpenChange={setReadByModalOpen}>
                 <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
-                        <DialogTitle>Kimlar o'qidi</DialogTitle>
+                        <DialogTitle>{t('chat.readBy')}</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-3 mt-4 max-h-[60vh] overflow-y-auto pr-2">
                         {readByUsers.length === 0 ? (
