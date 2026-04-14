@@ -28,6 +28,7 @@ export default function TwoFactor({
     requiresConfirmation = false,
     twoFactorEnabled = false,
 }: Props) {
+    const { t } = useTranslation();
     const {
         qrCodeSvg,
         hasSetupData,
@@ -42,7 +43,7 @@ export default function TwoFactor({
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Two-Factor Authentication" />
+            <Head title={t("twoFactor.title")} />
 
             <h1 className="sr-only">Two-Factor Authentication Settings</h1>
 
@@ -50,8 +51,8 @@ export default function TwoFactor({
                 <div className="space-y-6">
                     <Heading
                         variant="small"
-                        title="Two-Factor Authentication"
-                        description="Manage your two-factor authentication settings"
+                        title={t("twoFactor.title")}
+                        description={t("twoFactor.description")}
                     />
                     {twoFactorEnabled ? (
                         <div className="flex flex-col items-start justify-start space-y-4">
@@ -77,7 +78,7 @@ export default function TwoFactor({
                                             type="submit"
                                             disabled={processing}
                                         >
-                                            <ShieldBan /> Disable 2FA
+                                            <ShieldBan /> {t("twoFactor.disable2FA")}
                                         </Button>
                                     )}
                                 </Form>
@@ -99,7 +100,7 @@ export default function TwoFactor({
                                         onClick={() => setShowSetupModal(true)}
                                     >
                                         <ShieldCheck />
-                                        Continue Setup
+                                        {t("twoFactor.continueSetup")}
                                     </Button>
                                 ) : (
                                     <Form
@@ -114,7 +115,7 @@ export default function TwoFactor({
                                                 disabled={processing}
                                             >
                                                 <ShieldCheck />
-                                                Enable 2FA
+                                                {t("twoFactor.enable2FA")}
                                             </Button>
                                         )}
                                     </Form>
