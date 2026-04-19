@@ -53,6 +53,13 @@ const translations = {
             rights: "Barcha huquqlar himoyalangan.",
             madeWith: "❤️ bilan yaratilgan",
         },
+        welcome: {
+            brand: '1Call',
+            active: "Faol qo'ng'iroqlar",
+            online: 'Onlayn operatorlar',
+            avgWait: "O'rt. kutish",
+            today: 'Bugun',
+        },
     },
     ru: {
         nav: { login: 'Войти', register: 'Регистрация', dashboard: 'Панель управления' },
@@ -86,6 +93,13 @@ const translations = {
             rights: 'Все права защищены.',
             madeWith: 'Сделано с ❤️',
         },
+        welcome: {
+            brand: '1Call',
+            active: 'Активные звонки',
+            online: 'Онлайн операторов',
+            avgWait: 'Ср. ожидание',
+            today: 'Сегодня',
+        },
     },
     en: {
         nav: { login: 'Log in', register: 'Register', dashboard: 'Dashboard' },
@@ -118,6 +132,13 @@ const translations = {
         footer: {
             rights: 'All rights reserved.',
             madeWith: 'Made with ❤️',
+        },
+        welcome: {
+            brand: '1Call',
+            active: 'Active Calls',
+            online: 'Online Operators',
+            avgWait: 'Avg. Wait',
+            today: 'Today',
         },
     },
 } as const;
@@ -342,9 +363,9 @@ export default function Welcome({ canRegister = true }: { canRegister?: boolean 
                                     <div className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-emerald-400 border-2 border-white animate-pulse" />
                                 </div>
                                 <div className="flex items-center -ml-0.5">
-                                    <span className="text-2xl font-black tracking-tighter text-indigo-600 mr-0.5">{t('welcome.brand').substring(0, 1)}</span>
+                                    <span className="text-2xl font-black tracking-tighter text-indigo-600 mr-0.5">{t.welcome.brand.substring(0, 1)}</span>
                                     <span className="text-xl font-bold tracking-tight text-gray-900">
-                                        <span className="gradient-text">{t('welcome.brand').substring(1)}</span>
+                                        <span className="gradient-text">{t.welcome.brand.substring(1)}</span>
                                     </span>
                                 </div>
                             </div>
@@ -501,28 +522,28 @@ export default function Welcome({ canRegister = true }: { canRegister?: boolean 
                                             <div className="rounded-xl bg-white/5 p-4 border border-white/5">
                                                 <div className="flex items-center gap-2 text-xs text-gray-400 mb-2">
                                                     <PhoneCall className="h-3.5 w-3.5" />
-                                                    <span>{t('welcome.active')}</span>
+                                                    <span>{t.welcome.active}</span>
                                                 </div>
                                                 <div className="text-2xl font-bold text-white">12</div>
                                             </div>
                                             <div className="rounded-xl bg-white/5 p-4 border border-white/5">
                                                 <div className="flex items-center gap-2 text-xs text-gray-400 mb-2">
                                                     <Users className="h-3.5 w-3.5" />
-                                                    <span>{t('welcome.online')}</span>
+                                                    <span>{t.welcome.online}</span>
                                                 </div>
                                                 <div className="text-2xl font-bold text-emerald-400">8</div>
                                             </div>
                                             <div className="rounded-xl bg-white/5 p-4 border border-white/5">
                                                 <div className="flex items-center gap-2 text-xs text-gray-400 mb-2">
                                                     <Clock className="h-3.5 w-3.5" />
-                                                    <span>{t('welcome.avgWait')}</span>
+                                                    <span>{t.welcome.avgWait}</span>
                                                 </div>
                                                 <div className="text-2xl font-bold text-yellow-400">0:23</div>
                                             </div>
                                             <div className="rounded-xl bg-white/5 p-4 border border-white/5">
                                                 <div className="flex items-center gap-2 text-xs text-gray-400 mb-2">
                                                     <CheckCircle2 className="h-3.5 w-3.5" />
-                                                    <span>{t('welcome.today')}</span>
+                                                    <span>{t.welcome.today}</span>
                                                 </div>
                                                 <div className="text-2xl font-bold text-indigo-400">247</div>
                                             </div>
