@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1Call — Call Center Platform</title>
+    <meta name="description" content="1Call — zamonaviy call center platformasi. Barcha qo'ng'iroqlarni bir joydan boshqaring.">
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- NAVIGATION -->
+        <nav id="main-nav">
+            <div class="container nav-container">
+                <div class="logo group">
+                    <div class="logo-icon">
+                        <i data-lucide="phone"></i>
+                        <div class="status-dot"></div>
+                    </div>
+                    <div class="logo-text">
+                        <span class="brand-num">1</span><span class="brand-name gradient-text">Call</span>
+                    </div>
+                </div>
+
+                <div class="nav-right">
+                    <div class="lang-switcher">
+                        <button id="lang-btn" class="lang-btn">
+                            <span id="current-lang-flag">🇺🇿</span>
+                            <span id="current-lang-label" class="hidden-mobile">O'zbekcha</span>
+                            <i data-lucide="chevron-down" class="chevron"></i>
+                        </button>
+                        <div id="lang-menu" class="lang-menu hidden">
+                            <!-- JS will populate this -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- HERO SECTION -->
+        <section class="hero">
+            <div id="particles-container" class="particles-container"></div>
+            
+            <div class="hero-bg-gradients">
+                <div class="gradient gradient-1"></div>
+                <div class="gradient gradient-2"></div>
+                <div class="gradient gradient-3"></div>
+            </div>
+
+            <div class="hero-rings">
+                <div class="ring ring-1"></div>
+                <div class="ring ring-2"></div>
+                <div class="ring ring-3"></div>
+            </div>
+
+            <div class="container hero-container">
+                <div class="hero-grid">
+                    <div class="hero-content animate-slide-up">
+                        <div class="badge" id="hero-badge">
+                            🚀 Zamonaviy Call Center platformasi
+                        </div>
+                        <h1 class="hero-title">
+                            <span id="hero-title-main">Call Centerni</span><br>
+                            <span id="hero-title-highlight" class="gradient-text-alt">aqlli boshqaring</span>
+                        </h1>
+                        <p class="hero-subtitle" id="hero-subtitle">
+                            Barcha qo'ng'iroqlarni bir joydan boshqaring. Real-time monitoring, yozib olish, analitika va ko'p tillilik — barchasi bitta platformada.
+                        </p>
+                        <div class="hero-actions">
+                            <a href="#features" class="btn btn-primary" id="hero-cta">
+                                <span id="hero-cta-text">Boshlash</span>
+                                <i data-lucide="arrow-right"></i>
+                            </a>
+                            <button class="btn btn-secondary" id="hero-cta-secondary" onclick="scrollToFeatures()">
+                                Batafsil ma'lumot
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="hero-visual hidden-mobile animate-slide-in-right">
+                        <div class="visual-wrapper">
+                            <div class="float-icon icon-in">
+                                <i data-lucide="phone-incoming"></i>
+                            </div>
+                            <div class="float-icon icon-out">
+                                <i data-lucide="phone-outgoing"></i>
+                            </div>
+                            <div class="float-icon icon-headset">
+                                <i data-lucide="headset"></i>
+                            </div>
+
+                            <div class="mockup-card glass">
+                                <div class="mockup-header">
+                                    <div class="dot red"></div>
+                                    <div class="dot yellow"></div>
+                                    <div class="dot green"></div>
+                                    <span class="mockup-title">1Call Dashboard</span>
+                                </div>
+
+                                <div class="mockup-stats">
+                                    <div class="stat-mini">
+                                        <div class="stat-mini-header">
+                                            <i data-lucide="phone-call"></i>
+                                            <span data-t="welcome.active">Faol qo'ng'iroqlar</span>
+                                        </div>
+                                        <div class="stat-mini-value">12</div>
+                                    </div>
+                                    <div class="stat-mini">
+                                        <div class="stat-mini-header">
+                                            <i data-lucide="users"></i>
+                                            <span data-t="welcome.online">Onlayn operatorlar</span>
+                                        </div>
+                                        <div class="stat-mini-value text-emerald">8</div>
+                                    </div>
+                                    <div class="stat-mini">
+                                        <div class="stat-mini-header">
+                                            <i data-lucide="clock"></i>
+                                            <span data-t="welcome.avgWait">O'rt. kutish</span>
+                                        </div>
+                                        <div class="stat-mini-value text-yellow">0:23</div>
+                                    </div>
+                                    <div class="stat-mini">
+                                        <div class="stat-mini-header">
+                                            <i data-lucide="check-circle-2"></i>
+                                            <span data-t="welcome.today">Bugun</span>
+                                        </div>
+                                        <div class="stat-mini-value text-indigo">247</div>
+                                    </div>
+                                </div>
+
+                                <div class="mockup-list">
+                                    <div class="list-item">
+                                        <div class="list-item-left">
+                                            <div class="status-indicator bg-emerald"></div>
+                                            <div>
+                                                <div class="item-name">Alisher Umarov</div>
+                                                <div class="item-num">+998 90 123 45 67</div>
+                                            </div>
+                                        </div>
+                                        <span class="status-badge bg-emerald-light">active</span>
+                                    </div>
+                                    <div class="list-item">
+                                        <div class="list-item-left">
+                                            <div class="status-indicator bg-yellow animate-pulse"></div>
+                                            <div>
+                                                <div class="item-name">Nodira Karimova</div>
+                                                <div class="item-num">+998 91 234 56 78</div>
+                                            </div>
+                                        </div>
+                                        <span class="status-badge bg-yellow-light">ringing</span>
+                                    </div>
+                                    <div class="list-item">
+                                        <div class="list-item-left">
+                                            <div class="status-indicator bg-orange"></div>
+                                            <div>
+                                                <div class="item-name">Jasur Toshmatov</div>
+                                                <div class="item-num">+998 93 345 67 89</div>
+                                            </div>
+                                        </div>
+                                        <span class="status-badge bg-orange-light">hold</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scroll-indicator">
+                <button onclick="scrollToFeatures()">
+                    <i data-lucide="chevron-down" class="animate-bounce"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- STATS SECTION -->
+        <section class="stats">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-card glass-light card-hover">
+                        <i data-lucide="phone-call" class="text-indigo"></i>
+                        <div class="stat-value"><span class="counter" data-target="500">0</span>+</div>
+                        <div class="stat-label" data-t="stats.calls">Kunlik qo'ng'iroqlar</div>
+                    </div>
+                    <div class="stat-card glass-light card-hover">
+                        <i data-lucide="headset" class="text-purple"></i>
+                        <div class="stat-value"><span class="counter" data-target="25">0</span>+</div>
+                        <div class="stat-label" data-t="stats.operators">Faol operatorlar</div>
+                    </div>
+                    <div class="stat-card glass-light card-hover">
+                        <i data-lucide="zap" class="text-emerald"></i>
+                        <div class="stat-value"><span class="counter" data-target="99">0</span>.9%</div>
+                        <div class="stat-label" data-t="stats.uptime">Ishonchlilik</div>
+                    </div>
+                    <div class="stat-card glass-light card-hover">
+                        <i data-lucide="check-circle-2" class="text-pink"></i>
+                        <div class="stat-value"><span class="counter" data-target="98">0</span>%</div>
+                        <div class="stat-label" data-t="stats.satisfaction">Mijozlar mamnuniyati</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURES SECTION -->
+        <section id="features" class="features">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-badge" data-t="features.title">Imkoniyatlar</span>
+                    <h2 class="section-title" id="features-subtitle">1Call bilan siz nimalar qila olasiz</h2>
+                </div>
+                <div class="features-grid" id="features-list">
+                    <!-- JS will populate this -->
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA SECTION -->
+        <section class="cta">
+            <div class="container">
+                <div class="cta-card hero-gradient">
+                    <div id="cta-particles" class="particles-container"></div>
+                    <div class="cta-content">
+                        <div class="cta-icon">
+                            <i data-lucide="phone"></i>
+                        </div>
+                        <h2 class="cta-title" data-t="hero.cta">Boshlash</h2>
+                        <p class="cta-subtitle" data-t="hero.subtitle">Barcha qo'ng'iroqlarni bir joydan boshqaring.</p>
+                        <a href="#" class="btn btn-white group">
+                            <span data-t="hero.cta">Boshlash</span>
+                            <i data-lucide="arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer>
+            <div class="container footer-container">
+                <div class="footer-logo">
+                    <div class="logo-icon small">
+                        <i data-lucide="phone"></i>
+                    </div>
+                    <div class="logo-text">
+                        <span class="brand-num">1</span><span class="brand-name gradient-text">Call</span>
+                    </div>
+                </div>
+                <p class="copyright" id="footer-copyright">
+                    © 2026 1Call. Barcha huquqlar himoyalangan. ❤️ bilan yaratilgan
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
