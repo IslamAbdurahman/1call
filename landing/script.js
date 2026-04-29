@@ -37,6 +37,10 @@ const translations = {
             avgWait: "O'rt. kutish",
             today: 'Bugun',
         },
+        meta: {
+            title: "1Call — Zamonaviy Call Center Platformasi va Monitoring Tizimi",
+            description: "1Call — O'zbekistondagi eng ilg'or call center platformasi. Qo'ng'iroqlarni real-vaqtda kuzatish, yozib olish, analitika va aqlli marshrutlash tizimi."
+        }
     },
     ru: {
         hero: {
@@ -76,6 +80,10 @@ const translations = {
             avgWait: 'Ср. ожидание',
             today: 'Сегодня',
         },
+        meta: {
+            title: "1Call — Современная Платформа Call-Центра и Система Мониторинга",
+            description: "1Call — самая передовая платформа для колл-центров в Узбекистане. Мониторинг звонков в реальном времени, запись разговоров и аналитика."
+        }
     },
     en: {
         hero: {
@@ -115,6 +123,10 @@ const translations = {
             avgWait: 'Avg. Wait',
             today: 'Today',
         },
+        meta: {
+            title: "1Call — Modern Call Center Platform and Monitoring System",
+            description: "1Call — the most advanced call center platform in Uzbekistan. Real-time call monitoring, recording, analytics, and smart routing."
+        }
     },
 };
 
@@ -126,10 +138,24 @@ const langLabels = {
 
 const featureIcons = ['zap', 'phone-call', 'mic', 'bar-chart-3', 'globe', 'shield'];
 
-let currentLang = localStorage.getItem('welcome_lang') || 'uz';
+let currentLang = 'uz';
+
+// Detection logic
+const urlParams = new URLSearchParams(window.location.search);
+const langParam = urlParams.get('lang');
+if (langParam && translations[langParam]) {
+    currentLang = langParam;
+} else {
+    currentLang = localStorage.getItem('welcome_lang') || 'uz';
+}
 
 function updateContent() {
     const t = translations[currentLang];
+    
+    // Update Meta
+    document.title = t.meta.title;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute('content', t.meta.description);
     
     // Update simple text nodes
     document.getElementById('hero-badge').textContent = t.hero.badge;
