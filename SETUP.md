@@ -87,6 +87,20 @@ server {
         proxy_set_header Host $host;
         proxy_read_timeout 86400;
     }
+
+    # WebSocket proxy (Reverb uchun)
+    location /app {
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header Scheme $scheme;
+        proxy_set_header SERVER_PORT $server_port;
+        proxy_set_header REMOTE_ADDR $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+
+        proxy_pass http://127.0.0.1:8080;
+    }
 }
 ```
 
@@ -550,6 +564,20 @@ ARI_HOST=localhost:8088
 ARI_USER=1call
 ARI_PASSWORD=11221122
 ARI_APP=1call
+
+# Reverb (Server)
+REVERB_APP_ID=123456
+REVERB_APP_KEY=1callkey
+REVERB_APP_SECRET=any_secret_here
+REVERB_HOST="0.0.0.0"
+REVERB_PORT=8080
+REVERB_SCHEME=http
+
+# Reverb (Frontend - Nginx orqali)
+VITE_REVERB_APP_KEY="${REVERB_APP_KEY}"
+VITE_REVERB_HOST="yourdomain.uz"
+VITE_REVERB_PORT=443
+VITE_REVERB_SCHEME=https
 ```
 
 ### 6.4. Ma'lumotlar bazasini migratsiya qilish
