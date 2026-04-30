@@ -86,8 +86,13 @@ class AriClient
         if (! $channelId) {
             return;
         }
-        Http::withBasicAuth($this->user, $this->password)
+        $response = Http::withBasicAuth($this->user, $this->password)
             ->delete("{$this->url}/channels/{$channelId}");
+            
+        Log::info("🗑 ARI Hangup request for $channelId", [
+            'status' => $response->status(),
+            'body' => $response->body()
+        ]);
     }
 
     public function destroyBridge(?string $bridgeId): void
@@ -95,7 +100,12 @@ class AriClient
         if (! $bridgeId) {
             return;
         }
-        Http::withBasicAuth($this->user, $this->password)
+        $response = Http::withBasicAuth($this->user, $this->password)
             ->delete("{$this->url}/bridges/{$bridgeId}");
+
+        Log::info("💥 ARI Destroy bridge request for $bridgeId", [
+            'status' => $response->status(),
+            'body' => $response->body()
+        ]);
     }
 }
