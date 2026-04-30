@@ -59,7 +59,15 @@ class StasisEndHandler implements AriEventHandlerInterface
 
         if ($otherChannelId) {
             $command->warn("🔌 Hanging up other channel: $otherChannelId");
-            $ariClient->hangupChannel($otherChannelId);
+            
+            if ($otherChannelId === $inboundId) {
+                TelegramLogger::log("<b>🔌 StasisEnd → continuing inbound in dialplan: <code>{$inboundId}</code></b>");
+                $ariClient->continueInDialplan($inboundId);
+                // Fallback
+                $ariClient->hangupChannel($inboundId);
+            } else {
+                $ariClient->hangupChannel($otherChannelId);
+            }
         }
 
         // Destroy the bridge

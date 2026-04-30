@@ -71,6 +71,13 @@ class AriClient
             ->successful();
     }
 
+    public function continueInDialplan(string $channelId): bool
+    {
+        return Http::withBasicAuth($this->user, $this->password)
+            ->post("{$this->url}/channels/{$channelId}/continue")
+            ->successful();
+    }
+
     public function addChannelToBridge(string $bridgeId, string $channelId): void
     {
         Http::withBasicAuth($this->user, $this->password)

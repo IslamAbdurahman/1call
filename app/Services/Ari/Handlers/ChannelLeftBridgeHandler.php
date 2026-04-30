@@ -42,8 +42,10 @@ class ChannelLeftBridgeHandler implements AriEventHandlerInterface
                 TelegramLogger::log("<b>🔌 Inbound left → hanging up outbound: <code>{$outboundId}</code></b>");
                 $ariClient->hangupChannel($outboundId);
             } elseif ($channelId === $outboundId && $inboundId) {
-                $command->info("🔌 Outbound left, hanging up inbound: $inboundId");
-                TelegramLogger::log("<b>🔌 Outbound left → hanging up inbound: <code>{$inboundId}</code></b>");
+                $command->info("🔌 Outbound left, continuing inbound in dialplan: $inboundId");
+                TelegramLogger::log("<b>🔌 Outbound left → continuing inbound in dialplan: <code>{$inboundId}</code></b>");
+                $ariClient->continueInDialplan($inboundId);
+                // Also hangup as fallback
                 $ariClient->hangupChannel($inboundId);
             } else {
                 TelegramLogger::log("<b>⚠️ Channel not matched! No hangup action taken.</b>");

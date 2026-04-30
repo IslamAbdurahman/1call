@@ -25,7 +25,13 @@ class ChannelDestroyedHandler implements AriEventHandlerInterface
 
             if ($otherId) {
                 $command->warn("🔌 Channel $channelId destroyed, ensuring partner $otherId is hung up");
-                $ariClient->hangupChannel($otherId);
+                
+                if ($otherId === $inboundId) {
+                    $ariClient->continueInDialplan($inboundId);
+                    $ariClient->hangupChannel($inboundId);
+                } else {
+                    $ariClient->hangupChannel($otherId);
+                }
             }
 
             if ($bridgeId) {
