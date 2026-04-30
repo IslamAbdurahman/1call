@@ -88,6 +88,17 @@ class AriClient
             ]);
     }
 
+    public function listChannels(): array
+    {
+        try {
+            $response = Http::withBasicAuth($this->user, $this->password)
+                ->get("{$this->url}/channels");
+            return $response->successful() ? $response->json() : [];
+        } catch (\Throwable $e) {
+            return [];
+        }
+    }
+
     public function hangupChannel(?string $channelId): void
     {
         if (! $channelId) {
@@ -104,10 +115,24 @@ class AriClient
             $status = $response->status();
             $body = $response->body();
 
+            if ($status === 404) {
+                // If 404, let's see what channels ARE actually there
+                $allChannels = $this->listChannels();
+                $channelList = "";
+                foreach ($allChannels as $c) {
+                    $channelList .= "• <code>{$c['id']}</code> ({$c['name']})\n";
+                }
+                
+                TelegramLogger::log(
+                    "<b>🔍 404 Not Found Diagnostic</b>\n" .
+                    "Tried to hangup: <code>{$channelId}</code>\n" .
+                    "Active channels in Asterisk:\n" . ($channelList ?: "<i>None</i>")
+                );
+            }
+
             TelegramLogger::log(
                 "<b>🔴 hangupChannel</b>\n" .
                 "Channel: <code>{$channelId}</code>\n" .
-                "URL: <code>{$url}</code>\n" .
                 "HTTP Status: <b>{$status}</b>\n" .
                 "Response: <pre>{$body}</pre>"
             );

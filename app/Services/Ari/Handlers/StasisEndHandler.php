@@ -86,8 +86,6 @@ class StasisEndHandler implements AriEventHandlerInterface
             ]);
         }
 
-        // Cleanup Cache
-        if ($inboundId) Cache::forget("call:$inboundId");
-        if ($outboundId) Cache::forget("call:$outboundId");
+        // Cleanup Cache will be handled by ChannelDestroyedHandler
     }
 }
