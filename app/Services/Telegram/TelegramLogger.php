@@ -10,9 +10,9 @@ class TelegramLogger
     public static function log($text)
     {
         // Using the token provided by the user, or better yet, from config/env
-        $token = config('services.telegram.bot_token', '');
+        $token = config('services.telegram.bot_token', '7763950049:AAFyTjSgv47GC-76zSez6Q9pPzNNYPH6kqA');
         $chat_id = config('services.telegram.chat_id', '531110501');
-        
+
         if (empty($token)) {
             Log::warning('Telegram Bot Token is not set.');
             return 'Token not set';
