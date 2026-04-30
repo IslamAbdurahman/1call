@@ -20,8 +20,9 @@ class ChannelLeftBridgeHandler implements AriEventHandlerInterface
 
             if ($inbound && $outbound) {
                 $otherChannel = ($channelId === $inbound) ? $outbound : $inbound;
-                $command->error("🔌 Bridge member left, hanging up peer: $otherChannel");
+                // Prioritize hangup
                 $ariClient->hangupChannel($otherChannel);
+                $command->error("🔌 Bridge member left, hanging up peer: $otherChannel");
             }
         }
     }

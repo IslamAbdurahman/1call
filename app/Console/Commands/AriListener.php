@@ -85,8 +85,8 @@ class AriListener extends Command
 
                 $type = $event['type'] ?? 'Unknown';
 
-                // Send all ARI events to Telegram
-                \App\Services\Telegram\TelegramLogger::log(
+                // Dispatch ARI events to Telegram via background job to avoid blocking the event loop
+                \App\Jobs\SendTelegramLog::dispatch(
                     "<b>📨 ARI EVENT: {$type}</b>\n" .
                     "<pre>" . json_encode($event, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . "</pre>"
                 );

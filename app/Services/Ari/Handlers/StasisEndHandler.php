@@ -32,9 +32,7 @@ class StasisEndHandler implements AriEventHandlerInterface
 
         $command->info("🏁 Ending call session. Inbound: $inbound, Outbound: $outbound, Bridge: $bridgeId");
 
-        broadcast(new CallStateChanged($inbound, 'Ended', $callInfo));
-
-        // Hang up both. The one already ending will just return 404 which AriClient ignores.
+        // Prioritize hanging up both channels immediately
         if ($inbound) {
             $ariClient->hangupChannel($inbound);
         }
@@ -44,6 +42,8 @@ class StasisEndHandler implements AriEventHandlerInterface
         if ($bridgeId) {
             $ariClient->destroyBridge($bridgeId);
         }
+
+        broadcast(new CallStateChanged($inbound, 'Ended', $callInfo));
 
         if (empty($callInfo['recording_name'])) {
             if ($channelId === $inbound) {
