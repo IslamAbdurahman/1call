@@ -70,6 +70,12 @@ class AriClient
             ->post("{$this->url}/bridges/{$bridgeId}/addChannel", ['channel' => $channelId]);
     }
 
+    public function removeChannelFromBridge(string $bridgeId, string $channelId): void
+    {
+        Http::withBasicAuth($this->user, $this->password)
+            ->post("{$this->url}/bridges/{$bridgeId}/removeChannel", ['channel' => $channelId]);
+    }
+
     public function recordBridge(string $bridgeId, string $recordingName): void
     {
         Log::info("🎙 Starting recording for bridge: $bridgeId");

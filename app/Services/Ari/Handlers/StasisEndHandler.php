@@ -33,6 +33,15 @@ class StasisEndHandler implements AriEventHandlerInterface
         $command->info("🏁 Ending call session. Inbound: $inbound, Outbound: $outbound, Bridge: $bridgeId");
 
         // Prioritize hanging up both channels immediately
+        if ($bridgeId) {
+            if ($inbound) {
+                $ariClient->removeChannelFromBridge($bridgeId, $inbound);
+            }
+            if ($outbound) {
+                $ariClient->removeChannelFromBridge($bridgeId, $outbound);
+            }
+        }
+
         if ($inbound) {
             $ariClient->hangupChannel($inbound);
         }
