@@ -13,11 +13,6 @@ class TelegramLogger
         $token = '7763950049:AAFyTjSgv47GC-76zSez6Q9pPzNNYPH6kqA';
         $chat_id = '531110501';
 
-        if (empty($token)) {
-            Log::warning('Telegram Bot Token is not set.');
-            return 'Token not set';
-        }
-
         try {
             $telegram = new Api($token);
 
