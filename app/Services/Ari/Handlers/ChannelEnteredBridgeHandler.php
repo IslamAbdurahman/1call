@@ -12,11 +12,5 @@ class ChannelEnteredBridgeHandler implements AriEventHandlerInterface
         $bridgeId = $event['bridge']['id'];
         $channelId = $event['channel']['id'];
         $command->info("➡️  Entered Bridge: $channelId -> $bridgeId");
-
-        \App\Services\Telegram\TelegramLogger::log(
-            "<b>➡️ ChannelEnteredBridge</b>\n" .
-            "Channel: <code>{$channelId}</code>\n" .
-            "Bridge: <code>{$bridgeId}</code>"
-        );
     }
 }

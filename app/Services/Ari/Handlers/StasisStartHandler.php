@@ -15,14 +15,6 @@ class StasisStartHandler implements AriEventHandlerInterface
         $args = $event['args'] ?? [];
 
         if (! empty($args) && $args[0] === 'outbound') {
-            $realOutboundId = $event['channel']['id'];
-            $bridgeId = $args[1] ?? 'unknown';
-            
-            \App\Services\Telegram\TelegramLogger::log(
-                "<b>📞 Outbound StasisStart</b>\n" .
-                "Real Channel ID: <code>{$realOutboundId}</code>\n" .
-                "Bridge ID from args: <code>{$bridgeId}</code>"
-            );
             return;
         }
 

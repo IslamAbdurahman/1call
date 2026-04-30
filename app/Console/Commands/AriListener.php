@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Services\Ari\AriClient;
-use App\Services\Ari\Handlers\BridgeDestroyedHandler;
 use App\Services\Ari\Handlers\ChannelDestroyedHandler;
 use App\Services\Ari\Handlers\ChannelEnteredBridgeHandler;
 use App\Services\Ari\Handlers\ChannelLeftBridgeHandler;
@@ -44,7 +43,6 @@ class AriListener extends Command
         'ChannelDestroyed' => ChannelDestroyedHandler::class,
         'ChannelEnteredBridge' => ChannelEnteredBridgeHandler::class,
         'ChannelLeftBridge' => ChannelLeftBridgeHandler::class,
-        'BridgeDestroyed' => BridgeDestroyedHandler::class,
     ];
 
     public function __construct(AriClient $ariClient)
@@ -95,8 +93,8 @@ class AriListener extends Command
 
                 // Filter out some noisy events if needed, but for now log all major ones
                 if ($type !== 'ChannelVarset' && $type !== 'ChannelDtmfReceived') {
-                    $this->line("\n" . str_repeat('=', 60));
-                    $this->line('📨 EVENT: ' . $type);
+                    $this->line("\n".str_repeat('=', 60));
+                    $this->line('📨 EVENT: '.$type);
                 }
 
                 if (isset($this->handlers[$type])) {

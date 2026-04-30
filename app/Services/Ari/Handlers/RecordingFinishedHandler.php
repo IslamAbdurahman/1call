@@ -41,6 +41,8 @@ class RecordingFinishedHandler implements AriEventHandlerInterface
                 $dst = $callInfo['called'] ?? null;
                 $startTime = $callInfo['start_time'] ?? null;
                 $callId = $callInfo['inbound_channel'] ?? null;
+
+                Cache::forget("bridge_info:{$bridgeId}");
             }
         }
 

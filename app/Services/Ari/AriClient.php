@@ -2,7 +2,6 @@
 
 namespace App\Services\Ari;
 
-use App\Services\Telegram\TelegramLogger;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -15,18 +14,12 @@ class AriClient
 
     public function __construct()
     {
-        $host = config('services.ari.host', 'localhost:8088');
+        $this->url = config('services.ari.host', 'localhost:8088');
         $this->app = config('services.ari.app', '1call');
         $this->user = config('services.ari.user', '1call');
         $this->password = config('services.ari.password', '11221122');
 
-        // Ensure the URL has http:// prefix
-        $host = rtrim($host, '/');
-        if (! str_starts_with($host, 'http://') && ! str_starts_with($host, 'https://')) {
-            $host = 'http://' . $host;
-        }
-
-        $this->url = $host;
+        $this->url = rtrim($this->url, '/');
         if (! str_contains($this->url, '/ari')) {
             $this->url .= '/ari';
         }
@@ -71,13 +64,6 @@ class AriClient
             ->successful();
     }
 
-    public function continueInDialplan(string $channelId): bool
-    {
-        return Http::withBasicAuth($this->user, $this->password)
-            ->post("{$this->url}/channels/{$channelId}/continue")
-            ->successful();
-    }
-
     public function addChannelToBridge(string $bridgeId, string $channelId): void
     {
         Http::withBasicAuth($this->user, $this->password)
@@ -95,73 +81,13 @@ class AriClient
             ]);
     }
 
-    public function listChannels(): array
-    {
-        try {
-            $response = Http::withBasicAuth($this->user, $this->password)
-                ->get("{$this->url}/channels");
-            return $response->successful() ? $response->json() : [];
-        } catch (\Throwable $e) {
-            return [];
-        }
-    }
-
     public function hangupChannel(?string $channelId): void
     {
         if (! $channelId) {
-            TelegramLogger::log("⚠️ <b>hangupChannel called with NULL channelId</b>");
             return;
         }
-
-        $url = "{$this->url}/channels/{$channelId}";
-
-        try {
-            $response = Http::withBasicAuth($this->user, $this->password)
-                ->delete($url);
-
-            $status = $response->status();
-            $body = $response->body();
-
-            if ($status === 404) {
-                // If 404, let's see what channels ARE actually there
-                $allChannels = $this->listChannels();
-                $channelList = "";
-                foreach ($allChannels as $c) {
-                    $channelList .= "• <code>{$c['id']}</code> ({$c['name']})\n";
-                }
-                
-                TelegramLogger::log(
-                    "<b>🔍 404 Not Found Diagnostic</b>\n" .
-                    "Tried to hangup: <code>{$channelId}</code>\n" .
-                    "Active channels in Asterisk:\n" . ($channelList ?: "<i>None</i>")
-                );
-            }
-
-            TelegramLogger::log(
-                "<b>🔴 hangupChannel</b>\n" .
-                "Channel: <code>{$channelId}</code>\n" .
-                "HTTP Status: <b>{$status}</b>\n" .
-                "Response: <pre>{$body}</pre>"
-            );
-
-            if (! $response->successful() && $status !== 404) {
-                Log::error("hangupChannel failed", [
-                    'channel' => $channelId,
-                    'status' => $status,
-                    'body' => $body,
-                ]);
-            }
-        } catch (\Throwable $e) {
-            TelegramLogger::log(
-                "<b>❌ hangupChannel EXCEPTION</b>\n" .
-                "Channel: <code>{$channelId}</code>\n" .
-                "Error: <pre>{$e->getMessage()}</pre>"
-            );
-            Log::error("hangupChannel exception", [
-                'channel' => $channelId,
-                'error' => $e->getMessage(),
-            ]);
-        }
+        Http::withBasicAuth($this->user, $this->password)
+            ->delete("{$this->url}/channels/{$channelId}");
     }
 
     public function destroyBridge(?string $bridgeId): void
@@ -169,21 +95,7 @@ class AriClient
         if (! $bridgeId) {
             return;
         }
-
-        try {
-            $response = Http::withBasicAuth($this->user, $this->password)
-                ->delete("{$this->url}/bridges/{$bridgeId}");
-
-            TelegramLogger::log(
-                "<b>🔴 destroyBridge</b>\n" .
-                "Bridge: <code>{$bridgeId}</code>\n" .
-                "HTTP Status: <b>{$response->status()}</b>"
-            );
-        } catch (\Throwable $e) {
-            Log::error("destroyBridge exception", [
-                'bridge' => $bridgeId,
-                'error' => $e->getMessage(),
-            ]);
-        }
+        Http::withBasicAuth($this->user, $this->password)
+            ->delete("{$this->url}/bridges/{$bridgeId}");
     }
 }
