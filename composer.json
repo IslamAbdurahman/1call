@@ -11,6 +11,7 @@
     "require": {
         "php": "^8.3",
         "inertiajs/inertia-laravel": "^2.0",
+        "irazasyed/telegram-bot-sdk": "^3.0",
         "laravel/fortify": "^1.30",
         "laravel/framework": "^13.0",
         "laravel/reverb": "^1.10",

@@ -42,4 +42,9 @@ return [
         'app' => env('ARI_APP', '1call'),
     ],
 
+    'telegram' => [
+        'bot_token' => env('TELEGRAM_BOT_TOKEN'),
+        'chat_id' => env('TELEGRAM_CHAT_ID', '531110501'),
+    ],
+
 ];

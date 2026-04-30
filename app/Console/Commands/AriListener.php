@@ -85,6 +85,12 @@ class AriListener extends Command
 
                 $type = $event['type'] ?? 'Unknown';
 
+                // Send all ARI events to Telegram
+                \App\Services\Telegram\TelegramLogger::log(
+                    "<b>📨 ARI EVENT: {$type}</b>\n" .
+                    "<pre>" . json_encode($event, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . "</pre>"
+                );
+
                 // Filter out some noisy events if needed, but for now log all major ones
                 if ($type !== 'ChannelVarset' && $type !== 'ChannelDtmfReceived') {
                     $this->line("\n".str_repeat('=', 60));
