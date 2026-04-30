@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Services\Ari\AriClient;
+use App\Services\Ari\Handlers\BridgeDestroyedHandler;
 use App\Services\Ari\Handlers\ChannelDestroyedHandler;
 use App\Services\Ari\Handlers\ChannelEnteredBridgeHandler;
 use App\Services\Ari\Handlers\ChannelLeftBridgeHandler;
@@ -43,6 +44,7 @@ class AriListener extends Command
         'ChannelDestroyed' => ChannelDestroyedHandler::class,
         'ChannelEnteredBridge' => ChannelEnteredBridgeHandler::class,
         'ChannelLeftBridge' => ChannelLeftBridgeHandler::class,
+        'BridgeDestroyed' => BridgeDestroyedHandler::class,
     ];
 
     public function __construct(AriClient $ariClient)

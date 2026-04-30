@@ -71,12 +71,5 @@ class StasisEndHandler implements AriEventHandlerInterface
         // Cleanup Cache
         if ($inboundId) Cache::forget("call:$inboundId");
         if ($outboundId) Cache::forget("call:$outboundId");
-        if ($bridgeId) {
-            // Only forget bridge_info if there's no recording
-            // (If there's a recording, RecordingFinishedHandler will clean it up)
-            if (empty($callInfo['recording_name'])) {
-                Cache::forget("bridge_info:$bridgeId");
-            }
-        }
     }
 }
