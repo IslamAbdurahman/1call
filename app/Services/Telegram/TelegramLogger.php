@@ -10,7 +10,7 @@ class TelegramLogger
     public static function log($text)
     {
         // Using the token provided by the user, or better yet, from config/env
-        $token = '7763950049:AAFyTjSgv47GC-76zSez6Q9pPzNNYPH6kqA';
+        $token = '8797898691:AAGpk7E9mgVeTTJ7g-tXKGl5O60hIryUwHQ';
         $chat_id = '531110501';
 
         try {
