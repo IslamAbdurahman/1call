@@ -12,5 +12,17 @@ class ChannelLeftBridgeHandler implements AriEventHandlerInterface
         $bridgeId = $event['bridge']['id'];
         $channelId = $event['channel']['id'];
         $command->warn("⬅️  Left Bridge: $channelId <- $bridgeId");
+
+        $callInfo = \Illuminate\Support\Facades\Cache::get("bridge_info:$bridgeId");
+        if ($callInfo) {
+            $inbound = $callInfo['inbound_channel'] ?? null;
+            $outbound = $callInfo['outbound_channel'] ?? null;
+
+            if ($inbound && $outbound) {
+                $otherChannel = ($channelId === $inbound) ? $outbound : $inbound;
+                $command->error("🔌 Bridge member left, hanging up peer: $otherChannel");
+                $ariClient->hangupChannel($otherChannel);
+            }
+        }
     }
 }

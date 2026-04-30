@@ -14,22 +14,39 @@ class StasisEndHandler implements AriEventHandlerInterface
     public function handle(array $event, AriListener $command, AriClient $ariClient): void
     {
         $channelId = $event['channel']['id'];
-        $command->error("📴 Call ended: $channelId");
+        $command->error("📴 StasisEnd: $channelId");
 
         $callInfo = Cache::get("call:$channelId");
 
         if (! $callInfo) {
+            $command->warn("⚠️ No call info in cache for channel: $channelId");
+            // If this was an outbound channel that never fully started, 
+            // we might not have 'call:id' but maybe we have it in bridge_info?
+            // For now, let's just return if not found.
             return;
         }
 
-        broadcast(new CallStateChanged($callInfo['inbound_channel'], 'Ended', $callInfo));
+        $inbound = $callInfo['inbound_channel'] ?? null;
+        $outbound = $callInfo['outbound_channel'] ?? null;
+        $bridgeId = $callInfo['bridge_id'] ?? null;
 
-        $ariClient->hangupChannel($callInfo['inbound_channel']);
-        $ariClient->hangupChannel($callInfo['outbound_channel']);
-        $ariClient->destroyBridge($callInfo['bridge_id']);
+        $command->info("🏁 Ending call session. Inbound: $inbound, Outbound: $outbound, Bridge: $bridgeId");
+
+        broadcast(new CallStateChanged($inbound, 'Ended', $callInfo));
+
+        // Hang up both. The one already ending will just return 404 which AriClient ignores.
+        if ($inbound) {
+            $ariClient->hangupChannel($inbound);
+        }
+        if ($outbound) {
+            $ariClient->hangupChannel($outbound);
+        }
+        if ($bridgeId) {
+            $ariClient->destroyBridge($bridgeId);
+        }
 
         if (empty($callInfo['recording_name'])) {
-            if ($channelId === $callInfo['inbound_channel']) {
+            if ($channelId === $inbound) {
                 CallHistory::create([
                     'date_time' => $callInfo['start_time'] ?? now(),
                     'src' => $callInfo['caller'] ?? null,
@@ -38,7 +55,7 @@ class StasisEndHandler implements AriEventHandlerInterface
                     'type' => 'inbound',
                     'status' => 'no-answer',
                     'recorded_file' => null,
-                    'call_id' => $callInfo['inbound_channel'] ?? null,
+                    'call_id' => $inbound,
                     'module' => 'ARI',
                 ]);
                 Log::info('📵 No-answer CallHistory saqlandi', [
@@ -46,12 +63,13 @@ class StasisEndHandler implements AriEventHandlerInterface
                     'dst' => $callInfo['called'] ?? '-',
                 ]);
             }
-            Cache::forget("call:{$callInfo['inbound_channel']}");
-            Cache::forget("call:{$callInfo['outbound_channel']}");
-            Cache::forget("bridge_info:{$callInfo['bridge_id']}");
+            Cache::forget("call:{$inbound}");
+            Cache::forget("call:{$outbound}");
+            Cache::forget("bridge_info:{$bridgeId}");
         } else {
-            Cache::forget("call:{$callInfo['inbound_channel']}");
-            Cache::forget("call:{$callInfo['outbound_channel']}");
+            Cache::forget("call:{$inbound}");
+            Cache::forget("call:{$outbound}");
+            // bridge_info is forgotten in RecordingFinishedHandler if recording exists
         }
     }
 }
