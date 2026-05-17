@@ -47,6 +47,7 @@ class PjsipTrunkSyncService
                     ['id' => "aor-{$id}"],
                     [
                         'contact' => $serverUri,
+                        'qualify_frequency' => 60,
                     ]
                 );
 
@@ -99,6 +100,7 @@ class PjsipTrunkSyncService
                     ['id' => "aor-{$id}"],
                     [
                         'contact' => $serverUri,
+                        'qualify_frequency' => 60,
                     ]
                 );
 
