@@ -310,7 +310,44 @@
         "deleteConfirmDesc": "После удаления аккаунта все ресурсы и данные будут безвозвратно удалены. Введите пароль для подтверждения.",
         "unverifiedEmail": "Ваш email не подтверждён.",
         "clickResend": "Нажмите здесь, чтобы отправить письмо повторно.",
-        "newVerificationSent": "Новая ссылка подтверждения отправлена на ваш email."
+        "newVerificationSent": "Новая ссылка подтверждения отправлена на ваш email.",
+        "server": "Сервер",
+        "serverSettings": {
+            "title": "Настройки Сервера",
+            "description": "Управление Asterisk, Dialplan и Сетевыми интерфейсами",
+            "tabs": {
+                "dialplan": "Dialplan",
+                "network": "Сеть",
+                "asterisk": "Asterisk"
+            },
+            "dialplan": {
+                "addDID": "Добавить новый DID",
+                "didNumber": "Номер DID",
+                "context": "Контекст",
+                "action": "Действие",
+                "noData": "Пока нет номеров DID."
+            },
+            "network": {
+                "warning": "Внимание: Изменение сетевых настроек может отключить сервер.",
+                "ipAddress": "IP Адрес",
+                "subnetMask": "Маска подсети",
+                "gateway": "Шлюз",
+                "apply": "Сохранить и Применить"
+            },
+            "asterisk": {
+                "status": "Статус Asterisk",
+                "running": "Работает",
+                "stopped": "Остановлен",
+                "activeCalls": "Активные звонки",
+                "reloadDialplan": "Перезагрузить Dialplan",
+                "restart": "Перезапустить Asterisk",
+                "endpoints": "Статус PJSIP Endpoints",
+                "noEndpoints": "Эндпоинты не найдены."
+            },
+            "confirmDeleteDID": "Вы уверены, что хотите удалить этот DID номер?",
+            "confirmNetwork": "Вы уверены, что хотите применить сетевые настройки? Это может разорвать соединение.",
+            "confirmCommand": "Вы уверены, что хотите выполнить эту команду?"
+        }
     },
     "userMenu": {
         "settings": "Настройки",

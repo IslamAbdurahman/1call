@@ -21,6 +21,7 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
         { title: t('settings.password'), href: editPassword(), icon: null },
         { title: t('settings.twoFactor'), href: show(), icon: null },
         { title: t('settings.appearance'), href: editAppearance(), icon: null },
+        { title: t('settings.server'), href: '/settings/server', icon: null },
     ];
 
     // When server-side rendering, we only render the layout on the client...

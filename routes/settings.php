@@ -28,4 +28,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('settings/two-factor', [TwoFactorAuthenticationController::class, 'show'])
         ->name('two-factor.show');
+
+    // Server Settings
+    Route::get('settings/server', [\App\Http\Controllers\Settings\ServerController::class, 'index'])->name('server.show');
+    Route::post('settings/server/dialplan', [\App\Http\Controllers\Settings\ServerController::class, 'dialplanStore'])->name('server.dialplan.store');
+    Route::delete('settings/server/dialplan/{exten}', [\App\Http\Controllers\Settings\ServerController::class, 'dialplanDestroy'])->name('server.dialplan.destroy');
+    Route::put('settings/server/network', [\App\Http\Controllers\Settings\ServerController::class, 'networkUpdate'])->name('server.network.update');
+    Route::post('settings/server/asterisk/command', [\App\Http\Controllers\Settings\ServerController::class, 'asteriskCommand'])->name('server.asterisk.command');
 });

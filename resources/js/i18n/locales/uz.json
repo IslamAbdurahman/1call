@@ -310,7 +310,44 @@
         "deleteConfirmDesc": "Hisobingiz o'chirilgandan so'ng, barcha resurslar va ma'lumotlar ham doimiy ravishda o'chiriladi. Iltimos, hisobingizni doimiy ravishda o'chirishni tasdiqlash uchun parolingizni kiriting.",
         "unverifiedEmail": "Email manzilingiz tasdiqlanmagan.",
         "clickResend": "Tasdiqlash emailini qayta yuborish uchun bu yerga bosing.",
-        "newVerificationSent": "Yangi tasdiqlash havolasi email manzilingizga yuborildi."
+        "newVerificationSent": "Yangi tasdiqlash havolasi email manzilingizga yuborildi.",
+        "server": "Server",
+        "serverSettings": {
+            "title": "Server Sozlamalari",
+            "description": "Asterisk, Dialplan va Tarmoq interfeyslarini boshqarish",
+            "tabs": {
+                "dialplan": "Dialplan",
+                "network": "Tarmoq",
+                "asterisk": "Asterisk"
+            },
+            "dialplan": {
+                "addDID": "Yangi DID qo'shish",
+                "didNumber": "DID Raqami",
+                "context": "Context",
+                "action": "Amal",
+                "noData": "Hozircha DID raqamlar yo'q."
+            },
+            "network": {
+                "warning": "Diqqat: Tarmoq sozlamalarini o'zgartirish serverga ulanishni uzib qo'yishi mumkin.",
+                "ipAddress": "IP Manzil",
+                "subnetMask": "Subnet Mask",
+                "gateway": "Gateway",
+                "apply": "Saqlash va Qo'llash"
+            },
+            "asterisk": {
+                "status": "Asterisk Holati",
+                "running": "Ishlamoqda",
+                "stopped": "To'xtatilgan",
+                "activeCalls": "Faol Qo'ng'iroqlar",
+                "reloadDialplan": "Dialplan Reload",
+                "restart": "Asterisk Restart",
+                "endpoints": "PJSIP Endpoints Holati",
+                "noEndpoints": "Endpointlar topilmadi."
+            },
+            "confirmDeleteDID": "Ushbu DID raqamni o'chirishni tasdiqlaysizmi?",
+            "confirmNetwork": "Tarmoq sozlamalarini qo'llashni tasdiqlaysizmi? Bu ulanishni uzib qo'yishi mumkin.",
+            "confirmCommand": "Ushbu buyruqni ishga tushirishni tasdiqlaysizmi?"
+        }
     },
     "userMenu": {
         "settings": "Sozlamalar",

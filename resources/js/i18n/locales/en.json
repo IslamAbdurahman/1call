@@ -310,7 +310,44 @@
         "deleteConfirmDesc": "Once your account is deleted, all of its resources and data will also be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.",
         "unverifiedEmail": "Your email address is unverified.",
         "clickResend": "Click here to resend the verification email.",
-        "newVerificationSent": "A new verification link has been sent to your email address."
+        "newVerificationSent": "A new verification link has been sent to your email address.",
+        "server": "Server",
+        "serverSettings": {
+            "title": "Server Settings",
+            "description": "Manage Asterisk, Dialplan and Network Interfaces",
+            "tabs": {
+                "dialplan": "Dialplan",
+                "network": "Network",
+                "asterisk": "Asterisk"
+            },
+            "dialplan": {
+                "addDID": "Add New DID",
+                "didNumber": "DID Number",
+                "context": "Context",
+                "action": "Action",
+                "noData": "No DID numbers yet."
+            },
+            "network": {
+                "warning": "Warning: Changing network settings may disconnect the server.",
+                "ipAddress": "IP Address",
+                "subnetMask": "Subnet Mask",
+                "gateway": "Gateway",
+                "apply": "Save and Apply"
+            },
+            "asterisk": {
+                "status": "Asterisk Status",
+                "running": "Running",
+                "stopped": "Stopped",
+                "activeCalls": "Active Calls",
+                "reloadDialplan": "Reload Dialplan",
+                "restart": "Restart Asterisk",
+                "endpoints": "PJSIP Endpoints Status",
+                "noEndpoints": "No endpoints found."
+            },
+            "confirmDeleteDID": "Are you sure you want to delete this DID number?",
+            "confirmNetwork": "Are you sure you want to apply network settings? This might disconnect you.",
+            "confirmCommand": "Are you sure you want to run this command?"
+        }
     },
     "userMenu": {
         "settings": "Settings",
